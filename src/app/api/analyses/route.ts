@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/server/auth";
 import { getEntitlement } from "@/server/billing";
 import { createAnalysis } from "@/server/analysis/pipeline";
 import { validateTvLink } from "@/server/ai/schema";
+import { supabaseServer } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -103,3 +104,41 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const user = await getCurrentUser();
+    if (!user || !user.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabaseServer.from("analyses") as any)
+      .select("id, instrument, market_pack, timeframe, status, created_at, result")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.error("[api/analyses GET] Error fetching history:", error);
+      return NextResponse.json({ analyses: [] });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const analyses = (data || []).map((item: any) => ({
+      id: item.id,
+      instrument: item.instrument || item.result?.instrument?.symbol || "Chart",
+      marketPack: item.market_pack || item.result?.instrument?.market || "us-equities",
+      timeframe: item.timeframe || item.result?.instrument?.timeframe || "1D",
+      status: item.status,
+      createdAt: item.created_at,
+      stance: item.result?.plan?.stance,
+    }));
+
+    return NextResponse.json({ analyses });
+  } catch (err) {
+    console.error("[api/analyses GET] Unexpected error:", err);
+    return NextResponse.json({ analyses: [] });
+  }
+}
+

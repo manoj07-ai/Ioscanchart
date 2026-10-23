@@ -46,7 +46,7 @@ export interface StoredImageInfo {
 
 // Allowed image MIME types
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB per Prompt 05 spec
 
 /**
  * Validate and process uploaded image files into base64 and storage items.

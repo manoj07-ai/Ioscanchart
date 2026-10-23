@@ -248,6 +248,125 @@ async function callGemini(input: AnalyzeImagesInput): Promise<AnalyzeImagesOutpu
 export async function analyzeImages(
   input: AnalyzeImagesInput
 ): Promise<AnalyzeImagesOutput> {
+  // Mock mode for Playwright / test environments
+  if (process.env.AI_MOCK === "1") {
+    console.log("[gemini] AI_MOCK=1 active, returning mock analysis result");
+    const mockJson = {
+      dataQuality: {
+        readable: true,
+        score: 95,
+        detected: {
+          symbol: "NVDA",
+          market: "us-equities",
+          timeframe: "1D",
+          priceScaleVisible: true,
+          indicatorsSeen: ["200 SMA", "RSI"],
+        },
+        issues: [],
+      },
+      instrument: {
+        symbol: "NVDA",
+        market: "us-equities",
+        timeframe: "1D",
+        currency: "USD",
+        lastPrice: 120.0,
+      },
+      structure: {
+        trend: "up",
+        phase: "expansion",
+        summary: "Bullish trend continuation above daily key moving averages.",
+        keyObservations: [
+          "Consistent series of higher highs and higher lows",
+          "Holding above rising 50 EMA and 200 SMA",
+        ],
+      },
+      levels: [
+        {
+          type: "support",
+          price: 115.0,
+          strength: 4,
+          reason: "Prior swing high acting as polarity support",
+          visibleEvidence: "Three lower wick rejections in last 2 weeks",
+        },
+        {
+          type: "resistance",
+          price: 130.0,
+          strength: 5,
+          reason: "All-time high psychological and technical resistance",
+          visibleEvidence: "Sharp volume selloff at test of 130",
+        },
+      ],
+      indicators: [
+        {
+          name: "RSI (14)",
+          reading: "62.5",
+          implication: "Bullish momentum with room before overbought zone",
+          bias: "bull",
+        },
+      ],
+      scenarios: [
+        {
+          name: "Continuation breakout",
+          bias: "bull",
+          trigger: "Daily candle close above 122.50",
+          path: "Retest of 122.50 as support then run toward 130.00",
+          targets: [126.0, 130.0],
+          modelConfidence: "high",
+          confidenceNote:
+            "Model confidence based on clean trend structure. Not a statistical probability.",
+        },
+        {
+          name: "Pullback to 115 support",
+          bias: "neutral",
+          trigger: "Failure to hold 118 level",
+          path: "Drift down to 115.00 key demand zone before next leg up",
+          targets: [115.0],
+          modelConfidence: "medium",
+          confidenceNote:
+            "Contingency scenario if broader market pulls back.",
+        },
+      ],
+      plan: {
+        stance: "long",
+        entry: {
+          type: "breakout",
+          priceOrZone: 122.5,
+          reasoning: "Entry on confirmation above local consolidation high",
+        },
+        stop: {
+          price: 117.5,
+          reasoning: "Placed below recent consolidation low and 20 EMA",
+        },
+        targets: [
+          { price: 127.5, rr: 1.0 },
+          { price: 132.5, rr: 2.0 },
+        ],
+        riskPercent: 1.0,
+        invalidation: "Daily close below 117.00 invalidates long thesis",
+        summary:
+          "Buy the breakout above 122.50 with stop at 117.50, targeting 127.50 and 132.50.",
+      },
+      meta: {
+        promptVersion: PROMPT_VERSION,
+        marketPack: "us-equities",
+        disclaimer:
+          "This is not financial advice. Past performance does not guarantee future results. Trading involves risk of loss.",
+      },
+    };
+
+    return {
+      json: mockJson,
+      usage: {
+        inputTokens: 1200,
+        outputTokens: 450,
+        totalTokens: 1650,
+        costUsd: 0.0001,
+        model: "mock-gemini-2.0-flash",
+      },
+      latencyMs: 350,
+    };
+  }
+
   try {
     return await callGemini(input);
   } catch (err) {
