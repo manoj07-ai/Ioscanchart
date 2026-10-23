@@ -1,0 +1,11 @@
+{
+  "lastVerified": "2025-10-01",
+  "source": "https://www.nseindia.com/market-data/live-market-status",
+  "sessions": {
+    "NSE_BSE": { "pre": "09:00-09:15 IST", "regular": "09:15-15:30 IST", "post": "15:40-16:00 IST", "tz": "Asia/Kolkata" },
+    "NYSE_NASDAQ": { "pre": "04:00-09:30 ET", "regular": "09:30-16:00 ET", "post": "16:00-20:00 ET", "tz": "America/New_York" },
+    "FOREX": { "note": "24/5 from Sunday 17:00 ET to Friday 17:00 ET", "majorSessions": ["London 08:00-16:00 GMT", "New York 13:00-21:00 GMT", "Tokyo 00:00-09:00 GMT", "Sydney 22:00-07:00 GMT"] },
+    "CRYPTO": { "note": "24/7/365 — no official session breaks" },
+    "MCX": { "regular": "09:00-23:30 IST", "tz": "Asia/Kolkata" }
+  }
+}

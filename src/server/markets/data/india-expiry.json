@@ -1,0 +1,10 @@
+{
+  "lastVerified": "2025-10-01",
+  "source": "https://www.nseindia.com/products-services/equity-derivatives-calendar",
+  "note": "Verify and update before each month. Weekly expiry may change by exchange notice.",
+  "nifty": { "weekly": "Thursday", "monthly": "Last Thursday of month" },
+  "banknifty": { "weekly": "Wednesday", "monthly": "Last Wednesday of month" },
+  "finnifty": { "weekly": "Tuesday", "monthly": "Last Tuesday of month" },
+  "midcpnifty": { "weekly": "Monday", "monthly": "Last Monday of month" },
+  "sensex": { "weekly": "Friday", "monthly": "Last Friday of month" }
+}

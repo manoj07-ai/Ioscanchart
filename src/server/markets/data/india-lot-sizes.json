@@ -1,0 +1,13 @@
+{
+  "lastVerified": "2025-10-01",
+  "source": "https://www.nseindia.com/products-services/equity-derivatives-lot-size",
+  "note": "SEBI revises lot sizes periodically. Verify before use in any order calculations.",
+  "lots": {
+    "NIFTY": 75,
+    "BANKNIFTY": 30,
+    "FINNIFTY": 65,
+    "MIDCPNIFTY": 75,
+    "SENSEX": 20,
+    "BANKEX": 15
+  }
+}

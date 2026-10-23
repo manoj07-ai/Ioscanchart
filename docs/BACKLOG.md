@@ -25,3 +25,4 @@ Format:
 - [ ] [DOCS] Add architecture diagram to docs/
 - [ ] [TESTS] Add Playwright e2e smoke tests for upload → result flow (Prompt 09)
 - [ ] [SEO] Set canonical URLs and OG images for all marketing pages (Prompt 09)
+- [ ] [AI-PRICING] Fill real token prices in `src/config/ai-pricing.ts` from Google AI Studio (https://ai.google.dev/pricing). Current: placeholder prices set to 0.

@@ -1,0 +1,12 @@
+{
+  "name": "mock-unreadable-blurry-chart",
+  "marketHint": "us-equities",
+  "expectedReadable": false,
+  "expectedStance": "wait",
+  "images": [
+    {
+      "mimeType": "image/png",
+      "base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+    }
+  ]
+}

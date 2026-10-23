@@ -129,3 +129,11 @@ pnpm test        # vitest run
 4. Deploy.
 
 > Use Vercel's **Environment Variables** UI — never commit secrets.
+
+## 8. Gemini Model Selection (Prompt 04)
+
+Default model: `gemini-2.0-flash` (vision-capable, supports JSON schema output via `responseMimeType: "application/json" + `responseSchema`).
+To use a different model, set `GEMINI_MODEL` in `.env.local`.
+Recommended alternatives: `gemini-2.5-flash` (faster), `gemini-2.5-pro` (higher reasoning, higher cost).
+JSON schema structured output is supported on all Gemini 2.x models.
+
