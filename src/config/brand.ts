@@ -14,6 +14,10 @@ export const brand = {
   supportEmail: "support@iosnapchart.com",
   /** Social handles */
   twitter: "@iosnapchart",
+  /** Honesty rule: keep false until real, consented testimonials exist */
+  showTestimonials: false,
 } as const;
+
+export const SHOW_TESTIMONIALS = brand.showTestimonials;
 
 export type Brand = typeof brand;

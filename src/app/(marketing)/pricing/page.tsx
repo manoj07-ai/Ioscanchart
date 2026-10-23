@@ -1,8 +1,16 @@
+import { PricingSection } from "@/components/marketing/PricingSection";
+import { FaqSection } from "@/components/marketing/FaqSection";
+
+export const metadata = {
+  title: "Pricing Plans",
+  description: "Transparent pricing for Iosnapchart. Free taste, monthly subscription, and lifetime access.",
+};
+
 export default function PricingPage() {
   return (
-    <main style={{ padding: "2rem", color: "var(--text-1)" }}>
-      <h1 style={{ color: "var(--text-0)" }}>Pricing</h1>
-      <p>Full pricing page will be built in Prompt 03.</p>
-    </main>
+    <div className="py-12">
+      <PricingSection />
+      <FaqSection />
+    </div>
   );
 }

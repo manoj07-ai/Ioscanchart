@@ -5,6 +5,35 @@ Format: `[version] YYYY-MM-DD — description`.
 
 ---
 
+## [0.3.0] 2026-10-23 — Prompt 03: Marketing Landing Page
+
+### Added
+- Public marketing site in `src/app/(marketing)/`:
+  - `Navbar`: Responsive header with frosted blur on scroll, navigation links, Sign in stub, and primary CTA.
+  - `Hero`: Headline ("Drop any chart. From Wall Street to Dalal Street."), sub-headline, primary CTA, secondary sample jump link, micro-trust notes, and ambient `CandleBackdrop`.
+  - `HeroSampleCard`: Animated preview card clearly marked as an "Example analysis" showcasing NIFTY 50 1D/1H, data quality gate, levels with reasons, bull/bear triggers with model confidence, and actionable trade plan with invalidation.
+  - `MarketTickerStrip`: Covered markets strip highlighting US Equities, Forex, Crypto, Gold, Global Indices, and Indian Markets (NIFTY, BANKNIFTY, SENSEX, India Options with "New" and "Beta" badges).
+  - `InteractiveDemo`: Before/after split view with 3 pre-baked JSON instrument samples (NIFTY 50, AAPL, XAUUSD), complete with market structure, levels with reasons, bull/bear scenarios, and options Open Interest & Max Pain readouts.
+  - `HowItWorks`: 3-step workflow (Drop chart → Quality check & market pack → Structured plan in <30s).
+  - `FeaturesGrid`: 8 core features grid (Levels with reasons, Dual scenarios, Entry/stop/targets with R:R, Invalidation rules, Multi-timeframe confluence, Options chain & payoff reading, Trading journal, Academy).
+  - `ComparisonBlock`: "Why it's different" table contrasting our explainable engine against generic chatbots without naming competitors.
+  - `MarketsDeepDive`: Two-column comparison of Global vs. India markets with India options marked as Beta.
+  - `PricingSection`: Config-driven pricing reading from `plans.ts` (Demo, Monthly, Lifetime, "Shown in USD", CTAs routing to `/app/upgrade`).
+  - `SocialProofHonest`: Founding Trader early-access block with `<TestimonialPlaceholder />` gated by `SHOW_TESTIMONIALS = false`.
+  - `FounderNote`: "Why I built this" block with `{{FOUNDER_STORY}}` placeholder for founder editing.
+  - `FaqSection`: Accordion addressing all 9 questions (regulatory advice, accuracy, Indian options, blurry charts, refunds, guarantees).
+  - `Footer`: Legal navigation (`/terms`, `/privacy`, `/disclaimer`, `/risk`), contact info, copyright, and mandatory regulatory notice.
+  - `StickyMobileCta`: Mobile floating action bar activating after scrolling past the hero section.
+- SEO & Analytics:
+  - `src/app/robots.ts` and `src/app/sitemap.ts` with all marketing routes.
+  - JSON-LD structured data (`SoftwareApplication`, `FAQPage`) embedded in landing page.
+  - Client-side event tracking helper `src/lib/analytics/track.ts` and `/api/events` receiver route.
+- Legal & Compliance verification:
+  - Unit test `src/__tests__/marketing-compliance.test.ts` verifying zero fabricated stats ("1,300", "1,000+", "4.7") and `SHOW_TESTIMONIALS = false`.
+- Total unit tests passing: 26/26. Build generates 23 static and dynamic routes with zero warnings.
+
+---
+
 ## [0.2.0] 2026-10-23 — Prompt 02: Design System
 
 ### Added

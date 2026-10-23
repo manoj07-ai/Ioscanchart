@@ -1,8 +1,16 @@
+import { MarketsDeepDive } from "@/components/marketing/MarketsDeepDive";
+import { MarketTickerStrip } from "@/components/marketing/MarketTickerStrip";
+
+export const metadata = {
+  title: "Markets Covered",
+  description: "Comprehensive technical analysis across US Equities, Indian Indices, Options, Forex, Crypto, and Commodities.",
+};
+
 export default function MarketsPage() {
   return (
-    <main style={{ padding: "2rem", color: "var(--text-1)" }}>
-      <h1 style={{ color: "var(--text-0)" }}>Markets</h1>
-      <p>Markets page will be built in Prompt 03.</p>
-    </main>
+    <div className="py-12 space-y-12">
+      <MarketTickerStrip />
+      <MarketsDeepDive />
+    </div>
   );
 }
