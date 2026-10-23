@@ -1,69 +1,143 @@
-import Image from "next/image";
+import { brand } from "@/config/brand";
+import { MARKET_PACK_LIST } from "@/config/markets";
 
-export default function Home() {
+/**
+ * Placeholder home page — Bootstrap (Prompt 01).
+ * This will be replaced by the full marketing landing page in Prompt 03.
+ * Uses brand.name — never hardcoded.
+ */
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main
+      style={{
+        minHeight: "100dvh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "2rem",
+        padding: "2rem",
+        background: "var(--bg-0)",
+      }}
+    >
+      {/* Logo mark placeholder */}
+      <div
+        aria-hidden="true"
+        style={{
+          width: 64,
+          height: 64,
+          borderRadius: 16,
+          background: "linear-gradient(135deg, var(--candle), var(--candle-hi))",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 28,
+        }}
+      >
+        📈
+      </div>
+
+      <div style={{ textAlign: "center", maxWidth: 640 }}>
+        <h1
+          style={{
+            fontSize: "clamp(2rem, 5vw, 3rem)",
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
+            color: "var(--text-0)",
+            marginBottom: "0.75rem",
+          }}
+        >
+          {brand.name}
+        </h1>
+        <p
+          style={{
+            fontSize: "1.125rem",
+            color: "var(--text-1)",
+            lineHeight: 1.6,
+          }}
+        >
+          {brand.tagline}
+        </p>
+      </div>
+
+      {/* Status badge */}
+      <div
+        style={{
+          padding: "0.5rem 1rem",
+          borderRadius: 9999,
+          background: "var(--candle-dim)",
+          border: "1px solid var(--candle)",
+          color: "var(--candle)",
+          fontSize: "0.875rem",
+          fontWeight: 600,
+        }}
+      >
+        🚧 Bootstrap — Prompt 01 complete
+      </div>
+
+      {/* Market packs preview */}
+      <div style={{ maxWidth: 640, width: "100%" }}>
+        <p
+          style={{
+            textAlign: "center",
+            color: "var(--text-2)",
+            fontSize: "0.75rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            marginBottom: "1rem",
+          }}
+        >
+          Supported Markets ({MARKET_PACK_LIST.length} packs)
+        </p>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+            justifyContent: "center",
+          }}
+        >
+          {MARKET_PACK_LIST.map((pack) => (
+            <span
+              key={pack.id}
+              style={{
+                padding: "0.25rem 0.75rem",
+                borderRadius: 9999,
+                background: "var(--bg-2)",
+                border: "1px solid var(--line)",
+                color: pack.coverage === "beta" ? "var(--amber)" : "var(--text-1)",
+                fontSize: "0.8125rem",
+              }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              {pack.icon} {pack.shortName}
+              {pack.coverage === "beta" && (
+                <span
+                  style={{
+                    marginLeft: "0.375rem",
+                    fontSize: "0.625rem",
+                    opacity: 0.8,
+                  }}
+                >
+                  BETA
+                </span>
+              )}
+            </span>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+
+      {/* Health check link */}
+      <a
+        href="/api/health"
+        style={{
+          color: "var(--info)",
+          fontSize: "0.875rem",
+          textDecoration: "underline",
+          textUnderlineOffset: 3,
+        }}
+      >
+        /api/health ↗
+      </a>
+    </main>
   );
 }
