@@ -4,29 +4,68 @@
 /* ── Base ── */
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--bg-0);
   color: var(--text-1);
-  font-family: var(--font-ui);
+  font-family: var(--font-geist-sans, var(--font-ui));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 /* ── Tabular numerals for all price/level displays ── */
 .tabular-nums,
-.font-mono {
+.font-mono,
+code,
+kbd,
+samp {
+  font-family: var(--font-geist-mono, var(--font-mono));
   font-variant-numeric: tabular-nums;
+}
+
+/* ── Global Selection Color ── */
+::selection {
+  background-color: var(--candle-dim);
+  color: var(--text-0);
+}
+
+/* ── Focus ring (keyboard nav) ── */
+:focus-visible {
+  outline: 2px solid var(--candle);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Scrollbar (WebKit) ── */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-0);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--candle-dim);
 }
 
 /* ── Skeleton shimmer animation ── */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
-.skeleton {
+.skeleton-shimmer {
   background: linear-gradient(
     90deg,
     var(--bg-2) 25%,
@@ -34,21 +73,46 @@ body {
     var(--bg-2) 75%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
+  animation: shimmer 1.8s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton {
+  .skeleton-shimmer {
     animation: none;
     background: var(--bg-2);
   }
 }
 
-/* ── Candlestick wick divider (decorative, used in hero) ── */
+/* ── Card Subtle Inner Highlight ── */
+.card-highlight {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ── Primary CTA Gradient Button ── */
+.btn-primary-gradient {
+  background: linear-gradient(135deg, var(--candle), var(--candle-hi));
+  color: var(--cta-dark);
+  box-shadow: 0 0 20px var(--candle-glow);
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.btn-primary-gradient:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow: 0 0 28px rgba(91, 227, 140, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-primary-gradient:active:not(:disabled) {
+  transform: translateY(0);
+  filter: brightness(0.98);
+}
+
+/* ── Candlestick wick divider ── */
 .wick-divider {
   display: flex;
   align-items: center;
   gap: 16px;
+  width: 100%;
 }
 
 .wick-divider::before,
@@ -62,27 +126,4 @@ body {
     var(--line-strong),
     transparent
   );
-}
-
-/* ── Focus ring (keyboard nav) ── */
-:focus-visible {
-  outline: 2px solid var(--candle);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* ── Scrollbar (WebKit) ── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-1);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--line-strong);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--candle-dim);
 }

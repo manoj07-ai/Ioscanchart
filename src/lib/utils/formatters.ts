@@ -14,7 +14,16 @@ export function formatUSD(amount: number, decimals = 2): string {
 
 /** Format a price level with appropriate decimal places */
 export function formatPrice(price: number, decimals?: number): string {
-  const d = decimals ?? (price < 10 ? 4 : price < 1000 ? 2 : 0);
+  const d =
+    decimals !== undefined
+      ? decimals
+      : price < 10
+      ? 4
+      : price % 1 !== 0
+      ? 2
+      : price < 1000
+      ? 2
+      : 0;
   return new Intl.NumberFormat("en-IN", {
     minimumFractionDigits: d,
     maximumFractionDigits: d,

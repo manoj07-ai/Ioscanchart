@@ -1,8 +1,6 @@
 /* ==========================================================================
    Iosnapchart Design Tokens
-   Import this in app/globals.css BEFORE Tailwind utilities.
-   All tokens are CSS custom properties so they can be referenced both
-   in CSS and (via the tailwind.config mapping) in className strings.
+   Single source of truth for design tokens.
    ========================================================================== */
 
 :root {
@@ -11,33 +9,51 @@
   --bg-1: #0b120d; /* panels */
   --bg-2: #111a14; /* raised cards */
   --bg-3: #17231b; /* hover / inputs */
+  --color-bg-0: #060a07;
+  --color-bg-1: #0b120d;
+  --color-bg-2: #111a14;
+  --color-bg-3: #17231b;
 
   /* ── Borders ── */
   --line: #1f2e24;
   --line-strong: #2c4132;
+  --color-line: #1f2e24;
+  --color-line-strong: #2c4132;
 
   /* ── Text ── */
   --text-0: #f2f7f3; /* headings */
   --text-1: #bfcbc3; /* body */
   --text-2: #7f8f85; /* muted */
+  --color-text-0: #f2f7f3;
+  --color-text-1: #bfcbc3;
+  --color-text-2: #7f8f85;
 
   /* ── Brand / Bull ── */
   --candle: #5be38c; /* PRIMARY — bull / brand green */
   --candle-hi: #b4f25c; /* gradient end, highlights (lime) */
   --candle-dim: #1e6b3f; /* subdued green fills */
   --candle-glow: rgba(91, 227, 140, 0.22);
+  --cta-dark: #04120a; /* text on primary CTA */
+  --color-candle: #5be38c;
+  --color-candle-hi: #b4f25c;
+  --color-candle-dim: #1e6b3f;
+  --color-cta-dark: #04120a;
 
   /* ── Bear ── */
   --bear: #ff6b6b; /* coral — bearish */
   --bear-dim: #6b2a2a;
+  --color-bear: #ff6b6b;
+  --color-bear-dim: #6b2a2a;
 
   /* ── Accent ── */
   --amber: #f5b83d; /* caution / invalidation */
   --info: #5cc8ff; /* neutral info, links on dark */
+  --color-amber: #f5b83d;
+  --color-info: #5cc8ff;
 
   /* ── Typography ── */
-  --font-ui: "Geist", system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Fira Code", ui-monospace, monospace;
+  --font-ui: "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* ── Radii ── */
   --radius-sm: 8px;
@@ -59,6 +75,8 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
