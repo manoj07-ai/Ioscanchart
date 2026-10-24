@@ -12,7 +12,7 @@ export interface ModelPricing {
 }
 
 export const AI_PRICING: Record<string, ModelPricing> = {
-  "gemini-2.0-flash": { inputPerMillionTokens: 0, outputPerMillionTokens: 0 },
+  "gemini-3.8-flash": { inputPerMillionTokens: 0, outputPerMillionTokens: 0 },
   "gemini-2.5-flash": { inputPerMillionTokens: 0, outputPerMillionTokens: 0 },
   "gemini-2.5-pro": { inputPerMillionTokens: 0, outputPerMillionTokens: 0 },
 };
