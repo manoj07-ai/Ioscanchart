@@ -230,21 +230,35 @@ async function executeAnalysisEngine(opts: {
     });
 
     // Validate with Zod schema (with refinements)
-    const parseResult = AnalysisResultSchema.safeParse(json);
-
     let finalResult: AnalysisResult;
+    const parseResult = AnalysisResultSchema.safeParse(json);
 
     if (!parseResult.success) {
       console.warn(
         `[pipeline] Schema refinement warning for ${analysisId}:`,
-        parseResult.error.format()
+        JSON.stringify(parseResult.error.issues, null, 2)
       );
 
-      // If schema violation happens, fallback gracefully if json has dataQuality
-      // or rethrow to fail job
-      throw new Error(
-        `Analysis schema validation failed: ${parseResult.error.issues.map((i) => i.message).join(", ")}`
-      );
+      // Graceful fallback for slight model quirks (e.g. unreadable chart with stance not wait)
+      if (typeof json === "object" && json !== null) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const raw = json as any;
+        if (raw.dataQuality && raw.dataQuality.readable === false && raw.plan) {
+          raw.plan.stance = "wait";
+        }
+        const retryParse = AnalysisResultSchema.safeParse(raw);
+        if (retryParse.success) {
+          finalResult = retryParse.data;
+        } else {
+          throw new Error(
+            `Analysis schema validation failed: ${parseResult.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`
+          );
+        }
+      } else {
+        throw new Error(
+          `Analysis schema validation failed: ${parseResult.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`
+        );
+      }
     } else {
       finalResult = parseResult.data;
     }

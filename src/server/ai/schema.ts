@@ -13,13 +13,19 @@ import type { MarketPackId } from "@/config/markets";
 
 const BiasSchema = z.enum(["bull", "bear", "neutral"]);
 const StanceSchema = z.enum(["long", "short", "wait"]);
-const StrengthSchema = z.union([
+const StrengthSchema = z.preprocess((val) => {
+  if (typeof val === "number") {
+    const rounded = Math.round(val);
+    return Math.max(1, Math.min(5, rounded));
+  }
+  return 3;
+}, z.union([
   z.literal(1),
   z.literal(2),
   z.literal(3),
   z.literal(4),
   z.literal(5),
-]);
+]));
 const ConfidenceLevelSchema = z.enum(["low", "medium", "high"]);
 
 const MarketPackIdSchema = z.enum([
@@ -78,7 +84,12 @@ const LevelSchema = z.object({
     "liquidity",
   ]),
   price: z.number().optional(),
-  zone: z.tuple([z.number(), z.number()]).optional(),
+  zone: z
+    .union([
+      z.tuple([z.number(), z.number()]),
+      z.array(z.number()).transform((arr) => [arr[0] ?? 0, arr[1] ?? arr[0] ?? 0] as [number, number]),
+    ])
+    .optional(),
   strength: StrengthSchema,
   reason: z.string(),
   visibleEvidence: z.string(),
@@ -103,7 +114,11 @@ const ScenarioSchema = z.object({
 
 const EntrySchema = z.object({
   type: z.enum(["zone", "level", "breakout", "pullback"]),
-  priceOrZone: z.union([z.number(), z.tuple([z.number(), z.number()])]),
+  priceOrZone: z.union([
+    z.number(),
+    z.tuple([z.number(), z.number()]),
+    z.array(z.number()).transform((arr) => (arr.length === 1 ? arr[0] : [arr[0], arr[1]]) as number | [number, number]),
+  ]),
   reasoning: z.string(),
 });
 
