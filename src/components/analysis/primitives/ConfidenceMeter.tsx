@@ -5,24 +5,47 @@ import { cn } from "@/lib/utils/cn";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 export interface ConfidenceMeterProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Confidence score between 0 and 100 */
-  confidence: number;
+  /** Confidence score between 0 and 100, or a level string */
+  confidence?: number;
+  level?: "low" | "medium" | "high";
+  note?: string;
   label?: string;
   showPercentage?: boolean;
 }
 
 export function ConfidenceMeter({
   confidence,
+  level: levelProp,
+  note,
   label = "Model confidence",
   showPercentage = true,
   className,
   ...props
 }: ConfidenceMeterProps) {
-  const clamped = Math.min(Math.max(confidence, 0), 100);
+  const numericConf =
+    confidence !== undefined
+      ? confidence
+      : levelProp === "high"
+      ? 85
+      : levelProp === "medium"
+      ? 55
+      : 30;
+
+  const clamped = Math.min(Math.max(numericConf, 0), 100);
 
   // Confidence category
   const level =
-    clamped >= 75 ? "High" : clamped >= 45 ? "Moderate" : "Low";
+    levelProp !== undefined
+      ? levelProp === "high"
+        ? "High"
+        : levelProp === "medium"
+        ? "Moderate"
+        : "Low"
+      : clamped >= 75
+      ? "High"
+      : clamped >= 45
+      ? "Moderate"
+      : "Low";
 
   const levelColor =
     clamped >= 75
@@ -34,7 +57,12 @@ export function ConfidenceMeter({
   return (
     <div className={cn("flex flex-col space-y-1.5", className)} {...props}>
       <div className="flex items-center justify-between text-xs">
-        <Tooltip content="The model's own confidence in this scenario. Not a statistical probability or win rate.">
+        <Tooltip
+          content={
+            note ||
+            "The model's own confidence in this scenario. Not a statistical probability or win rate."
+          }
+        >
           <span className="flex items-center gap-1.5 text-[var(--text-1)] cursor-help border-b border-dotted border-[var(--text-2)]">
             <span>{label}</span>
             <span className="text-[10px] text-[var(--text-2)]">ℹ️</span>

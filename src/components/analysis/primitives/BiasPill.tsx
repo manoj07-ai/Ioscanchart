@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils/cn";
 
-export type MarketBias = "bullish" | "bearish" | "neutral";
+export type MarketBias = "bullish" | "bearish" | "neutral" | "bull" | "bear";
 
 export interface BiasPillProps extends React.HTMLAttributes<HTMLSpanElement> {
   bias: MarketBias;
@@ -17,6 +17,9 @@ export function BiasPill({
   className,
   ...props
 }: BiasPillProps) {
+  const normalizedBias: "bullish" | "bearish" | "neutral" =
+    bias === "bull" ? "bullish" : bias === "bear" ? "bearish" : bias;
+
   const configs = {
     bullish: {
       icon: "▲",
@@ -36,7 +39,7 @@ export function BiasPill({
       classes:
         "bg-[var(--bg-3)] text-[var(--text-1)] border-[var(--line-strong)]",
     },
-  }[bias];
+  }[normalizedBias];
 
   const sizeClasses = {
     sm: "text-[11px] px-2 py-0.5 gap-1",
@@ -48,17 +51,17 @@ export function BiasPill({
 
   return (
     <span
-      role="status"
-      aria-label={`Market bias: ${textLabel}`}
       className={cn(
-        "inline-flex items-center font-medium rounded-full border transition-colors select-none tracking-tight",
-        sizeClasses,
+        "inline-flex items-center rounded-full border font-medium select-none tracking-wide transition-colors",
         configs.classes,
+        sizeClasses,
         className
       )}
+      role="status"
+      aria-label={`Market bias: ${textLabel}`}
       {...props}
     >
-      <span className="text-[10px] font-bold" aria-hidden="true">
+      <span aria-hidden="true" className="font-mono text-[0.8em]">
         {configs.icon}
       </span>
       <span>{textLabel}</span>

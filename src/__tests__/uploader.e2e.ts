@@ -48,6 +48,7 @@ test.describe("App Workspace & Uploader Flow (Prompt 05)", () => {
 
     // Wait for redirect to /app/analysis/[id]
     await page.waitForURL(/\/app\/analysis\/.+/, { timeout: 25000 });
-    await expect(page.getByRole("heading", { name: /Analysis Result/i })).toBeVisible();
+    await expect(page.getByText("Quality")).toBeVisible();
+    await expect(page.getByText("Key Technical Levels")).toBeVisible();
   });
 });

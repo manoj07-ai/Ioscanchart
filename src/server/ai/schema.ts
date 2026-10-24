@@ -149,6 +149,42 @@ const MetaSchema = z.object({
   disclaimer: z.string(),
 });
 
+const OptionsViewSchema = z.object({
+  maxPain: z.number().optional(),
+  pcr: z.number().optional(),
+  callOiWall: z.number().optional(),
+  putOiWall: z.number().optional(),
+  expiryDate: z.string().optional(),
+  impliedVolatility: z.number().optional(),
+  strikes: z
+    .array(
+      z.object({
+        strike: z.number(),
+        callOi: z.number(),
+        putOi: z.number(),
+      })
+    )
+    .optional(),
+  strategyIdea: z
+    .object({
+      name: z.string(),
+      type: z.enum(["credit_spread", "debit_spread", "iron_condor", "straddle", "strangle", "naked"]),
+      maxProfit: z.number(),
+      maxLoss: z.number(),
+      breakevens: z.array(z.number()),
+      legs: z.array(
+        z.object({
+          action: z.enum(["buy", "sell"]),
+          type: z.enum(["call", "put"]),
+          strike: z.number(),
+          premium: z.number(),
+        })
+      ),
+      caveats: z.array(z.string()),
+    })
+    .optional(),
+});
+
 // ---------------------------------------------------------------------------
 // Main schema (without refinements first — for composability)
 // ---------------------------------------------------------------------------
@@ -161,6 +197,7 @@ const AnalysisResultBaseSchema = z.object({
   indicators: z.array(IndicatorSchema),
   scenarios: z.array(ScenarioSchema),
   plan: PlanSchema,
+  options: OptionsViewSchema.optional(),
   meta: MetaSchema,
 });
 
@@ -453,6 +490,57 @@ export const ANALYSIS_RESULT_JSON_SCHEMA = {
         summary: { type: "string" },
       },
       required: ["stance", "invalidation", "summary"],
+    },
+    options: {
+      type: "object",
+      properties: {
+        maxPain: { type: "number" },
+        pcr: { type: "number" },
+        callOiWall: { type: "number" },
+        putOiWall: { type: "number" },
+        expiryDate: { type: "string" },
+        impliedVolatility: { type: "number" },
+        strikes: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              strike: { type: "number" },
+              callOi: { type: "number" },
+              putOi: { type: "number" },
+            },
+            required: ["strike", "callOi", "putOi"],
+          },
+        },
+        strategyIdea: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            type: {
+              type: "string",
+              enum: ["credit_spread", "debit_spread", "iron_condor", "straddle", "strangle", "naked"],
+            },
+            maxProfit: { type: "number" },
+            maxLoss: { type: "number" },
+            breakevens: { type: "array", items: { type: "number" } },
+            legs: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  action: { type: "string", enum: ["buy", "sell"] },
+                  type: { type: "string", enum: ["call", "put"] },
+                  strike: { type: "number" },
+                  premium: { type: "number" },
+                },
+                required: ["action", "type", "strike", "premium"],
+              },
+            },
+            caveats: { type: "array", items: { type: "string" } },
+          },
+          required: ["name", "type", "maxProfit", "maxLoss", "breakevens", "legs", "caveats"],
+        },
+      },
     },
     meta: {
       type: "object",
