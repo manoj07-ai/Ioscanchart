@@ -14,7 +14,7 @@ import { computeCostUsd } from "@/config/ai-pricing";
 
 export const PROMPT_VERSION = "2026.10.1";
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-3.8-flash";
+const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash";
 const TIMEOUT_MS = 60_000; // 60 seconds
 const RETRY_BACKOFF_MS = 2_000;
 
