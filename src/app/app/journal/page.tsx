@@ -1,14 +1,14 @@
-import { JournalView } from "@/components/journal/JournalView";
+import { JournalPage } from "@/components/journal/JournalPage";
 
 export const metadata = {
-  title: "Trade Journal — Iosnapchart",
-  description: "Audit execution discipline, log setup outcomes, and track cumulative R multiple performance.",
+  title: "Trading Journal & P&L Calendar — Iosnapchart",
+  description: "Log trades, visualize your monthly P&L calendar, track equity curves, and review execution discipline.",
 };
 
-export default function JournalPage() {
+export default function AuthenticatedJournalPage() {
   return (
     <main className="min-h-screen bg-[var(--bg-0)] text-[var(--text-0)]">
-      <JournalView />
+      <JournalPage mode="api" isGuest={false} />
     </main>
   );
 }

@@ -1,0 +1,4 @@
+Date,Symbol,P&L,R,Direction,Market,Entry,Exit,Quantity,Multiplier,Fees,Risk,SetupTags,MistakeTags,FollowedPlan,Notes
+2026-10-24,NIFTY,450.00,2.25,long,india-indices,24100,24250,75,1,12.50,200.00,Trend pullback,None,yes,Clean higher low retest
+2026-10-25,AAPL,-150.00,-1.0,short,us-equities,230.50,233.50,50,1,2.00,150.00,Breakout & retest,Early exit,partly,Exited prematurely before target
+2026-10-26,BTCUSDT,820.00,3.2,long,crypto,67000,69500,0.5,1,8.00,250.00,Liquidity sweep,None,yes,Weekend sweep of Asian lows

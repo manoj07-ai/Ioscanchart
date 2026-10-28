@@ -23,6 +23,11 @@ Format: `[STATUS] Question — added Prompt XX`
 
 - [ ] **[DAILY-CAP]** Is 50 analyses/day the right soft cap for Monthly/Lifetime? Revisit once we know average LLM cost per analysis. — *Prompt 01*
 
+- [ ] **[JOURNAL/CURRENCY]** Default currency for new users: proceed with infer from locale, fallback USD. — *Prompt 12*
+- [ ] **[JOURNAL/PUBLIC-LINKS]** Allow public shareable links to a user's calendar? Default: no (image export only to avoid fake-proof abuse). — *Prompt 12*
+- [ ] **[JOURNAL/GUEST-IMPORT]** Should guest-mode local trades auto-import after signup? Default: yes, with a confirmation step. — *Prompt 12*
+- [ ] **[JOURNAL/CALENDAR-WEEKENDS]** Keep Mon–Fri as default calendar view? Default: Mon–Fri, with toggle for 7-day view and auto-enable when user trades crypto/weekends. — *Prompt 12*
+
 ## ✅ Resolved
 
 *(none yet)*

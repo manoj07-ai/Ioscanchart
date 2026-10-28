@@ -216,6 +216,7 @@ export function AnalysisView({ analysisId }: AnalysisViewProps) {
         instrument={result.instrument.symbol}
         market={result.instrument.market}
         timeframe={result.instrument.timeframe}
+        plan={result.plan}
       />
     </div>
   );

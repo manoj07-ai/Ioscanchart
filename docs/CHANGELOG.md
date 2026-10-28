@@ -5,6 +5,29 @@ Format: `[version] YYYY-MM-DD — description`.
 
 ---
 
+## [0.12.0] 2026-10-28 — Prompt 12: Trading Journal Redesign & Public SEO Tool
+
+### Added
+- Professional P&L-Calendar Trading Journal (`/app/journal`):
+  - Month calendar view with daily profit/loss tinting (`--candle` and `--bear` intensity scaling), glyphs (`▲/▼`), trade counts, weekly totals, and monthly P&L total.
+  - Stats strip: Net P&L, Win Rate (strictly gated at ≥10 trades), Profit Factor, Avg Win / Avg Loss, Best Day, Total Trades with W/L/BE split.
+  - Equity curve: cumulative running P&L / R trajectory with zero baseline, range chips (Month / 3M / YTD / All), and hover tooltips.
+  - R-multiple alongside Currency: instant global toggle between P&L ($) and R.
+  - Plan vs Actual: integration with AI analyses (`analysis_id`), prefilling planned setup, and logging plan adherence (Yes / Partly / No) with P&L split.
+  - Multi-currency support: USD, INR (`en-IN` formatting), EUR, GBP, AUD, JPY, and Points mode.
+  - Weekend-aware calendar: toggle between Mon–Fri and 7-day view, customizable week start (Sunday or Monday).
+  - Privacy mode: single-click toggle to blur all monetary values for screen sharing and social posts.
+  - Tags and Mistakes: setup tags, mistake tags (FOMO, moved stop, oversized, early exit, revenge trade, no setup) with comprehensive breakdown tabs.
+  - CSV Import & Export: batch import with column mapping validation, export to CSV, and downloadable standard template.
+  - Sample Data Mode: in-memory non-persisted test dataset with clear disclaimer banner and one-click clear.
+- Public SEO-Facing Journal:
+  - Pillar landing page `/trading-journal` (≥1,200 words with field table, review methodology, FAQ schema, embedded sample preview).
+  - Guest Mode Interactive Tool `/tools/trading-journal` (full client-side storage via IndexedDB/localStorage, zero login required).
+  - 6 dedicated market pages `/trading-journal/[market]` (Forex, Crypto, Stocks, Options, Futures, Nifty & Bank Nifty).
+  - 4 original educational blog posts under `/blog/...`.
+  - Downloadable CSV template `/downloads/trading-journal-template.csv`.
+- Database schema migration `supabase/migrations/0004_trades.sql` introducing `trades` and `journal_days` tables with full RLS and indexes.
+
 ## [0.3.0] 2026-10-23 — Prompt 03: Marketing Landing Page
 
 ### Added

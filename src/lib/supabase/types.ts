@@ -17,6 +17,7 @@ export interface Database {
           display_name: string | null;
           plan: "demo" | "monthly" | "lifetime";
           credits: number;
+          settings?: Json;
           created_at: string;
         };
         Insert: {
@@ -24,6 +25,7 @@ export interface Database {
           display_name?: string | null;
           plan?: "demo" | "monthly" | "lifetime";
           credits?: number;
+          settings?: Json;
           created_at?: string;
         };
         Update: {
@@ -31,6 +33,7 @@ export interface Database {
           display_name?: string | null;
           plan?: "demo" | "monthly" | "lifetime";
           credits?: number;
+          settings?: Json;
           created_at?: string;
         };
       };
@@ -203,6 +206,76 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["lesson_progress"]["Insert"]>;
+      };
+      trades: {
+        Row: {
+          id: string;
+          user_id: string;
+          analysis_id: string | null;
+          trade_date: string;
+          symbol: string;
+          market: string | null;
+          direction: "long" | "short" | null;
+          pnl: number;
+          currency: string;
+          r_multiple: number | null;
+          entry_price: number | null;
+          exit_price: number | null;
+          quantity: number | null;
+          multiplier: number;
+          fees: number;
+          risk_amount: number | null;
+          setup_tags: string[];
+          mistake_tags: string[];
+          followed_plan: "yes" | "partly" | "no" | null;
+          note: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          analysis_id?: string | null;
+          trade_date: string;
+          symbol: string;
+          market?: string | null;
+          direction?: "long" | "short" | null;
+          pnl: number;
+          currency?: string;
+          r_multiple?: number | null;
+          entry_price?: number | null;
+          exit_price?: number | null;
+          quantity?: number | null;
+          multiplier?: number;
+          fees?: number;
+          risk_amount?: number | null;
+          setup_tags?: string[];
+          mistake_tags?: string[];
+          followed_plan?: "yes" | "partly" | "no" | null;
+          note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["trades"]["Insert"]>;
+      };
+      journal_days: {
+        Row: {
+          user_id: string;
+          day: string;
+          note: string | null;
+          mood: number | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          day: string;
+          note?: string | null;
+          mood?: number | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["journal_days"]["Insert"]>;
       };
     };
     Views: Record<string, never>;
