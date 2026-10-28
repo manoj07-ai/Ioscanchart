@@ -114,40 +114,133 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user || !user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { searchParams } = req.nextUrl;
+    const search = searchParams.get("search")?.trim().toLowerCase() || "";
+    const market = searchParams.get("market") || "all";
+    const stance = searchParams.get("stance") || "all";
+    const outcome = searchParams.get("outcome") || "all";
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get("limit") || "12", 10)));
+
+    // Fetch user analyses that are not soft-deleted
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabaseServer.from("analyses") as any)
-      .select("id, instrument, market_pack, timeframe, status, created_at, result")
+    let query = (supabaseServer.from("analyses") as any)
+      .select("id, instrument, market_pack, timeframe, status, created_at, result, deleted_at")
       .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(10);
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false });
+
+    if (market !== "all") {
+      query = query.eq("market_pack", market);
+    }
+
+    const { data: rawAnalyses, error } = await query;
 
     if (error) {
       console.error("[api/analyses GET] Error fetching history:", error);
-      return NextResponse.json({ analyses: [] });
+      return NextResponse.json({ analyses: [], total: 0, page: 1, totalPages: 1 });
     }
 
+    // Fetch matching journal entries for this user to link outcomes
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const analyses = (data || []).map((item: any) => ({
-      id: item.id,
-      instrument: item.instrument || item.result?.instrument?.symbol || "Chart",
-      marketPack: item.market_pack || item.result?.instrument?.market || "us-equities",
-      timeframe: item.timeframe || item.result?.instrument?.timeframe || "1D",
-      status: item.status,
-      createdAt: item.created_at,
-      stance: item.result?.plan?.stance,
-    }));
+    const { data: journalRows } = await (supabaseServer.from("journal_entries") as any)
+      .select("id, analysis_id, outcome, r_multiple")
+      .eq("user_id", user.id);
 
-    return NextResponse.json({ analyses });
+    const journalMap = new Map<string, { id: string; outcome: string; rMultiple: number | null }>();
+    if (journalRows) {
+      for (const j of journalRows) {
+        if (j.analysis_id) {
+          journalMap.set(j.analysis_id, {
+            id: j.id,
+            outcome: j.outcome,
+            rMultiple: j.r_multiple !== null ? Number(j.r_multiple) : null,
+          });
+        }
+      }
+    }
+
+    // Fetch images to attach thumbnails
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: images } = await (supabaseServer.from("analysis_images") as any)
+      .select("analysis_id, storage_path")
+      .order("created_at", { ascending: true });
+
+    const thumbnailMap = new Map<string, string>();
+    if (images) {
+      for (const img of images) {
+        if (!thumbnailMap.has(img.analysis_id)) {
+          thumbnailMap.set(img.analysis_id, img.storage_path);
+        }
+      }
+    }
+
+    // Transform and apply in-memory filters
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let items = (rawAnalyses || []).map((item: any) => {
+      const itemStance = item.result?.plan?.stance || "wait";
+      const journal = journalMap.get(item.id);
+      return {
+        id: item.id,
+        instrument: item.instrument || item.result?.instrument?.symbol || "Chart",
+        marketPack: item.market_pack || item.result?.instrument?.market || "us-equities",
+        timeframe: item.timeframe || item.result?.instrument?.timeframe || "1D",
+        status: item.status,
+        createdAt: item.created_at,
+        stance: itemStance,
+        thumbnailUrl: thumbnailMap.get(item.id) || null,
+        journal: journal || null,
+      };
+    });
+
+    // Filter by search string
+    if (search) {
+      items = items.filter(
+        (it: { instrument: string; marketPack: string; timeframe: string }) =>
+          it.instrument.toLowerCase().includes(search) ||
+          it.marketPack.toLowerCase().includes(search) ||
+          it.timeframe.toLowerCase().includes(search)
+      );
+    }
+
+    // Filter by stance
+    if (stance !== "all") {
+      items = items.filter((it: { stance: string }) => it.stance.toLowerCase() === stance.toLowerCase());
+    }
+
+    // Filter by journal outcome
+    if (outcome !== "all") {
+      if (outcome === "unlogged") {
+        items = items.filter((it: { journal: unknown }) => !it.journal);
+      } else {
+        items = items.filter(
+          (it: { journal?: { outcome: string } }) =>
+            it.journal?.outcome?.toLowerCase() === outcome.toLowerCase()
+        );
+      }
+    }
+
+    const total = items.length;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const offset = (page - 1) * limit;
+    const paginated = items.slice(offset, offset + limit);
+
+    return NextResponse.json({
+      analyses: paginated,
+      total,
+      page,
+      totalPages,
+    });
   } catch (err) {
     console.error("[api/analyses GET] Unexpected error:", err);
-    return NextResponse.json({ analyses: [] });
+    return NextResponse.json({ analyses: [], total: 0, page: 1, totalPages: 1 });
   }
 }
 

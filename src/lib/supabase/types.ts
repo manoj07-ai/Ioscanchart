@@ -51,6 +51,7 @@ export interface Database {
           cost_usd: number | null;
           error: string | null;
           prompt_version: string | null;
+          deleted_at: string | null;
         };
         Insert: {
           id?: string;
@@ -68,6 +69,7 @@ export interface Database {
           cost_usd?: number | null;
           error?: string | null;
           prompt_version?: string | null;
+          deleted_at?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["analyses"]["Insert"]>;
       };
@@ -184,6 +186,23 @@ export interface Database {
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["early_access"]["Insert"]>;
+      };
+      lesson_progress: {
+        Row: {
+          id: string;
+          user_id: string;
+          lesson_slug: string;
+          completed: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          lesson_slug: string;
+          completed?: boolean;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["lesson_progress"]["Insert"]>;
       };
     };
     Views: Record<string, never>;

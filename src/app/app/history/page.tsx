@@ -1,8 +1,14 @@
+import { HistoryView } from "@/components/history/HistoryView";
+
+export const metadata = {
+  title: "Analysis History — Iosnapchart",
+  description: "Review, filter, and track all your previous technical chart analyses.",
+};
+
 export default function HistoryPage() {
   return (
-    <main style={{ padding: "2rem", color: "var(--text-1)" }}>
-      <h1 style={{ color: "var(--text-0)" }}>History</h1>
-      <p>Analysis history will be built in Prompt 07.</p>
+    <main className="min-h-screen bg-[var(--bg-0)] text-[var(--text-0)]">
+      <HistoryView />
     </main>
   );
 }

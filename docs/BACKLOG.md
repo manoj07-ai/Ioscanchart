@@ -27,3 +27,5 @@ Format:
 - [ ] [TESTS] Add Playwright e2e smoke tests for upload → result flow (Prompt 09)
 - [ ] [SEO] Set canonical URLs and OG images for all marketing pages (Prompt 09)
 - [ ] [AI-PRICING] Fill real token prices in `src/config/ai-pricing.ts` from Google AI Studio (https://ai.google.dev/pricing). Current: placeholder prices set to 0.
+- [ ] [JOURNAL] Personalization Moat (Prompt 07): Journal trade outcomes (win/loss/breakeven/R-multiple) will later be synthesized into personalized prompt context (e.g. "User performs best on NIFTY 15m pullbacks with avg 2.8R, but has negative expectancy on 1m breakouts; remind them of their historical edge"). Future moat: do not expose raw entries; compute a user edge vector and inject into `buildUserPrompt`.
+- [ ] [STORAGE] 30-Day Soft-Delete Cleanup Worker (Prompt 07): When an analysis is deleted in History, it is marked with `deleted_at = now()`. A scheduled background cron worker must run daily to hard-delete records where `deleted_at < now() - interval '30 days'` and purge all corresponding chart image files from Supabase Storage (`charts/${userId}/${analysisId}/*`).

@@ -9,6 +9,7 @@ import { ScenariosCard } from "@/components/analysis/ScenariosCard";
 import { KeyLevelsTable } from "@/components/analysis/KeyLevelsTable";
 import { StructureCard } from "@/components/analysis/StructureCard";
 import { OptionsView } from "@/components/analysis/OptionsView";
+import { LogTradeDialog } from "@/components/journal/LogTradeDialog";
 import { SHORT_DISCLAIMER } from "@/config/legal";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -21,6 +22,7 @@ interface AnalysisViewProps {
 export function AnalysisView({ analysisId }: AnalysisViewProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [journalOpen, setJournalOpen] = useState(false);
   const [data, setData] = useState<{
     id: string;
     status: string;
@@ -164,6 +166,7 @@ export function AnalysisView({ analysisId }: AnalysisViewProps) {
             plan={result.plan}
             symbol={result.instrument.symbol}
             timeframe={result.instrument.timeframe}
+            onAddToJournal={() => setJournalOpen(true)}
           />
 
           {/* 3. Scenarios Card */}
@@ -205,6 +208,15 @@ export function AnalysisView({ analysisId }: AnalysisViewProps) {
           </div>
         </div>
       </div>
+
+      <LogTradeDialog
+        open={journalOpen}
+        onOpenChange={setJournalOpen}
+        analysisId={analysisId}
+        instrument={result.instrument.symbol}
+        market={result.instrument.market}
+        timeframe={result.instrument.timeframe}
+      />
     </div>
   );
 }

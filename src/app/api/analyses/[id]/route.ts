@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/server/auth";
 import { getAnalysisResult } from "@/server/analysis/pipeline";
+import { supabaseServer } from "@/lib/supabase/server";
 
 export async function GET(
   _req: NextRequest,
@@ -42,5 +43,38 @@ export async function GET(
   } catch (err) {
     console.error("[api/analyses/[id] GET] Error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  _req: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = await getCurrentUser();
+    if (!user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await props.params;
+    if (!id) {
+      return NextResponse.json({ error: "Missing analysis ID" }, { status: 400 });
+    }
+
+    // Soft delete: sets deleted_at timestamp
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabaseServer.from("analyses") as any)
+      .update({ deleted_at: new Date().toISOString() })
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return NextResponse.json({ ok: true, message: "Analysis removed from history." });
+  } catch (err) {
+    console.error("[api/analyses/[id] DELETE] Error:", err);
+    return NextResponse.json({ error: "Failed to delete analysis" }, { status: 500 });
   }
 }
