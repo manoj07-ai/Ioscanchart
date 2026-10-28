@@ -2,11 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { brand } from "@/config/brand";
-import { Logo } from "@/components/brand/Logo";
+import { LogoMark } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/Dialog";
 import { cn } from "@/lib/utils/cn";
 
 export interface AnalysisHistoryItem {
@@ -33,10 +40,16 @@ export function AppSidebar({
   onToggleCollapse,
 }: AppSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [history, setHistory] = useState<AnalysisHistoryItem[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [creditsRemaining, setCreditsRemaining] = useState<number>(1);
   const [planName, setPlanName] = useState<string>("Demo plan");
+
+  // Delete modal state
+  const [itemToDelete, setItemToDelete] = useState<AnalysisHistoryItem | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // Fetch recent history and user entitlement
   useEffect(() => {
@@ -75,11 +88,38 @@ export function AppSidebar({
 
     loadData();
 
-    // Listen for custom analysis created event to refresh history
+    // Listen for custom analysis created & deleted events to refresh history
     const handleRefresh = () => loadData();
     window.addEventListener("analysis-created", handleRefresh);
-    return () => window.removeEventListener("analysis-created", handleRefresh);
+    window.addEventListener("analysis-deleted", handleRefresh);
+    return () => {
+      window.removeEventListener("analysis-created", handleRefresh);
+      window.removeEventListener("analysis-deleted", handleRefresh);
+    };
   }, []);
+
+  async function handleConfirmDelete() {
+    if (!itemToDelete) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/analyses/${itemToDelete.id}`, { method: "DELETE" });
+      if (res.ok) {
+        setHistory((prev) => prev.filter((h) => h.id !== itemToDelete.id));
+        window.dispatchEvent(
+          new CustomEvent("analysis-deleted", { detail: { id: itemToDelete.id } })
+        );
+        if (pathname === `/app/analysis/${itemToDelete.id}`) {
+          router.push("/app");
+        }
+      }
+    } catch (err) {
+      console.error("Failed to delete analysis:", err);
+    } finally {
+      setDeleting(false);
+      setItemToDelete(null);
+      setDeleteDialogOpen(false);
+    }
+  }
 
   const navLinks = [
     {
@@ -147,7 +187,7 @@ export function AppSidebar({
             href="/app"
             className="flex items-center gap-2 overflow-hidden focus-visible:outline-[var(--candle)]"
           >
-            <Logo size={28} />
+            <LogoMark size={28} />
             {!collapsed && (
               <span className="font-semibold text-sm tracking-tight text-[var(--text-0)] truncate">
                 {brand.name}
@@ -257,40 +297,61 @@ export function AppSidebar({
                   {history.slice(0, 10).map((item) => {
                     const isCurrent = pathname === `/app/analysis/${item.id}`;
                     return (
-                      <Link
+                      <div
                         key={item.id}
-                        href={`/app/analysis/${item.id}`}
-                        onClick={() => onClose()}
-                        className={cn(
-                          "flex items-center justify-between px-2 py-1.5 rounded-sm text-xs transition-colors group",
-                          isCurrent
-                            ? "bg-[var(--bg-2)] text-[var(--candle)] font-medium"
-                            : "text-[var(--text-1)] hover:text-[var(--text-0)] hover:bg-[var(--bg-2)]"
-                        )}
+                        className="group relative flex items-center justify-between rounded-sm"
                       >
-                        <div className="flex items-center gap-2 truncate">
-                          <span className="font-mono font-medium text-[var(--text-0)] text-xs">
-                            {item.instrument}
-                          </span>
-                          <span className="text-[10px] text-[var(--text-2)] uppercase">
-                            {item.timeframe}
-                          </span>
-                        </div>
-                        {item.stance && (
-                          <span
-                            className={cn(
-                              "text-[9px] font-mono font-semibold px-1 py-0.5 rounded-xs shrink-0",
-                              item.stance === "long"
-                                ? "bg-[var(--candle)]/10 text-[var(--candle)]"
-                                : item.stance === "short"
-                                ? "bg-[var(--bear)]/10 text-[var(--bear)]"
-                                : "bg-[var(--bg-3)] text-[var(--text-2)]"
-                            )}
-                          >
-                            {item.stance.toUpperCase()}
-                          </span>
-                        )}
-                      </Link>
+                        <Link
+                          href={`/app/analysis/${item.id}`}
+                          onClick={() => onClose()}
+                          className={cn(
+                            "flex items-center justify-between px-2 py-1.5 rounded-sm text-xs transition-colors flex-1 min-w-0 pr-7",
+                            isCurrent
+                              ? "bg-[var(--bg-2)] text-[var(--candle)] font-medium"
+                              : "text-[var(--text-1)] hover:text-[var(--text-0)] hover:bg-[var(--bg-2)]"
+                          )}
+                        >
+                          <div className="flex items-center gap-2 truncate">
+                            <span className="font-mono font-medium text-[var(--text-0)] text-xs">
+                              {item.instrument}
+                            </span>
+                            <span className="text-[10px] text-[var(--text-2)] uppercase">
+                              {item.timeframe}
+                            </span>
+                          </div>
+                          {item.stance && (
+                            <span
+                              className={cn(
+                                "text-[9px] font-mono font-semibold px-1 py-0.5 rounded-xs shrink-0",
+                                item.stance === "long"
+                                  ? "bg-[var(--candle)]/10 text-[var(--candle)]"
+                                  : item.stance === "short"
+                                  ? "bg-[var(--bear)]/10 text-[var(--bear)]"
+                                  : "bg-[var(--bg-3)] text-[var(--text-2)]"
+                              )}
+                            >
+                              {item.stance.toUpperCase()}
+                            </span>
+                          )}
+                        </Link>
+                        {/* Quick delete button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setItemToDelete(item);
+                            setDeleteDialogOpen(true);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 hover:text-red-400 text-[var(--text-2)] transition-opacity absolute right-1 rounded hover:bg-[var(--bg-3)] cursor-pointer"
+                          title="Delete analysis chart"
+                          aria-label={`Delete ${item.instrument} analysis`}
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -351,6 +412,50 @@ export function AppSidebar({
           )}
         </div>
       </aside>
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Chart Analysis?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to remove{" "}
+              <strong className="text-[var(--text-0)] font-mono">
+                {itemToDelete?.instrument} ({itemToDelete?.timeframe})
+              </strong>{" "}
+              from your analysis history?
+            </DialogDescription>
+          </DialogHeader>
+
+          <p className="text-xs text-[var(--text-2)]">
+            This analysis and its levels will be deleted from your active workspace.
+          </p>
+
+          <div className="flex justify-end gap-2 pt-3">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setDeleteDialogOpen(false);
+                setItemToDelete(null);
+              }}
+              disabled={deleting}
+              className="text-xs"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleConfirmDelete}
+              disabled={deleting}
+              className="text-xs font-semibold"
+            >
+              {deleting ? "Deleting..." : "Delete Analysis"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

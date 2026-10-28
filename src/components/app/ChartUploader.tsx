@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import {
@@ -9,6 +10,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/Dialog";
 import { GuidedTour } from "@/components/app/GuidedTour";
 import { EmptyExplainer } from "@/components/app/EmptyExplainer";
@@ -17,6 +19,14 @@ import { UpgradeDialog } from "@/components/billing/UpgradeDialog";
 import { validateTvLink } from "@/server/ai/schema";
 import { MARKET_PACK_LIST } from "@/config/markets";
 import { cn } from "@/lib/utils/cn";
+
+interface RecentAnalysisItem {
+  id: string;
+  instrument: string;
+  timeframe: string;
+  stance?: "long" | "short" | "wait";
+  createdAt: string;
+}
 
 interface UploadedItem {
   id: string;
@@ -75,6 +85,55 @@ export function ChartUploader() {
   const [unreadableModalOpen, setUnreadableModalOpen] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [paywallReason, setPaywallReason] = useState<"NO_CREDITS" | "DAILY_CAP">("NO_CREDITS");
+
+  // Recent analyses & delete state
+  const [recentAnalyses, setRecentAnalyses] = useState<RecentAnalysisItem[]>([]);
+  const [itemToDelete, setItemToDelete] = useState<RecentAnalysisItem | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const loadRecent = useCallback(async () => {
+    try {
+      const res = await fetch("/api/analyses?limit=4");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.analyses) setRecentAnalyses(data.analyses.slice(0, 4));
+      }
+    } catch (err) {
+      console.error("Failed to fetch recent analyses:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadRecent();
+    const handleSync = () => loadRecent();
+    window.addEventListener("analysis-created", handleSync);
+    window.addEventListener("analysis-deleted", handleSync);
+    return () => {
+      window.removeEventListener("analysis-created", handleSync);
+      window.removeEventListener("analysis-deleted", handleSync);
+    };
+  }, [loadRecent]);
+
+  async function handleConfirmDelete() {
+    if (!itemToDelete) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/analyses/${itemToDelete.id}`, { method: "DELETE" });
+      if (res.ok) {
+        setRecentAnalyses((prev) => prev.filter((a) => a.id !== itemToDelete.id));
+        window.dispatchEvent(
+          new CustomEvent("analysis-deleted", { detail: { id: itemToDelete.id } })
+        );
+      }
+    } catch (err) {
+      console.error("Failed to delete recent analysis:", err);
+    } finally {
+      setDeleting(false);
+      setItemToDelete(null);
+      setDeleteDialogOpen(false);
+    }
+  }
 
   // Save account prefs on change
   const handleAccountSizeChange = (val: string) => {
@@ -581,8 +640,135 @@ export function ChartUploader() {
         </Button>
       </div>
 
+      {/* Recent Analyses Section with Delete Option */}
+      {recentAnalyses.length > 0 && (
+        <div className="mt-10 pt-8 border-t border-[var(--line)] space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold text-[var(--text-0)] flex items-center gap-2">
+              <span>📊</span>
+              <span>Recent Analyses</span>
+            </h2>
+            <Link
+              href="/app/history"
+              className="text-xs text-[var(--candle)] hover:underline font-medium"
+            >
+              View all history →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {recentAnalyses.map((item) => (
+              <div
+                key={item.id}
+                className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg-1)] hover:border-[var(--line-strong)] transition-all flex items-center justify-between gap-3 group"
+              >
+                <div className="space-y-1 min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-bold text-xs text-[var(--text-0)] truncate">
+                      {item.instrument}
+                    </span>
+                    <span className="text-[10px] text-[var(--text-2)] uppercase font-mono px-1.5 py-0.5 rounded bg-[var(--bg-2)] border border-[var(--line)]">
+                      {item.timeframe}
+                    </span>
+                    {item.stance && (
+                      <span
+                        className={cn(
+                          "text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase",
+                          item.stance === "long"
+                            ? "bg-[var(--candle)]/15 text-[var(--candle)]"
+                            : item.stance === "short"
+                            ? "bg-[var(--bear)]/15 text-[var(--bear)]"
+                            : "bg-[var(--bg-3)] text-[var(--text-2)]"
+                        )}
+                      >
+                        {item.stance}
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-[10px] text-[var(--text-2)]">
+                    {new Date(item.createdAt).toLocaleDateString(undefined, {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <Link href={`/app/analysis/${item.id}`}>
+                    <Button variant="secondary" size="sm" className="text-xs h-8 px-3">
+                      Open →
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setItemToDelete(item);
+                      setDeleteDialogOpen(true);
+                    }}
+                    className="text-xs h-8 w-8 p-0 text-[var(--text-2)] hover:text-red-400 hover:bg-red-500/10 cursor-pointer"
+                    title="Delete chart analysis"
+                    aria-label={`Delete ${item.instrument}`}
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* 3-Step Explainer for empty state / guidance */}
       <EmptyExplainer />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Chart Analysis?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete{" "}
+              <strong className="text-[var(--text-0)] font-mono">
+                {itemToDelete?.instrument} ({itemToDelete?.timeframe})
+              </strong>{" "}
+              from your analysis history?
+            </DialogDescription>
+          </DialogHeader>
+
+          <p className="text-xs text-[var(--text-2)]">
+            This action removes the analysis and its levels from your active workspace.
+          </p>
+
+          <div className="flex justify-end gap-2 pt-3">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setDeleteDialogOpen(false);
+                setItemToDelete(null);
+              }}
+              disabled={deleting}
+              className="text-xs"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleConfirmDelete}
+              disabled={deleting}
+              className="text-xs font-semibold"
+            >
+              {deleting ? "Deleting..." : "Delete Analysis"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Modal: Unreadable Image feedback */}
       <Dialog

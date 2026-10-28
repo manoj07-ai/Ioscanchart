@@ -69,15 +69,6 @@ export function AppTopBar({ onOpenMobileMenu }: AppTopBarProps) {
           <span>Open TradingView</span>
           <span className="text-[10px] text-[var(--text-2)]">↗</span>
         </a>
-
-        {/* Theme indicator */}
-        <div
-          className="flex items-center gap-1 px-2 py-1 rounded-sm bg-[var(--bg-2)] border border-[var(--line)] text-[11px] text-[var(--text-2)]"
-          title="Dark mode is enabled by default"
-        >
-          <span>🌙</span>
-          <span className="hidden sm:inline">Dark</span>
-        </div>
       </div>
     </header>
   );
