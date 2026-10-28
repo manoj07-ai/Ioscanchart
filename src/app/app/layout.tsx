@@ -1,19 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/app/AppSidebar";
 import { AppTopBar } from "@/components/app/AppTopBar";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
     try {
-      return localStorage.getItem("ioscan_sidebar_collapsed") === "true";
+      if (localStorage.getItem("ioscan_sidebar_collapsed") === "true") {
+        setCollapsed(true);
+      }
     } catch {
-      return false;
+      // Ignore
     }
-  });
+  }, []);
 
   const handleToggleCollapse = () => {
     setCollapsed((prev) => {

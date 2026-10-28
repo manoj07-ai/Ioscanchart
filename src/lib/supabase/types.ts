@@ -149,6 +149,42 @@ export interface Database {
         };
         Update: Partial<Database["public"]["Tables"]["events"]["Insert"]>;
       };
+      credit_ledger: {
+        Row: {
+          id: string;
+          user_id: string;
+          analysis_id: string | null;
+          delta: number;
+          reason: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          analysis_id?: string | null;
+          delta: number;
+          reason: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["credit_ledger"]["Insert"]>;
+      };
+      early_access: {
+        Row: {
+          id: string;
+          email: string;
+          plan_interest: string | null;
+          consent: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          plan_interest?: string | null;
+          consent?: boolean;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["early_access"]["Insert"]>;
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

@@ -13,6 +13,7 @@ Format:
 
 - [ ] [AUTH] Swap mock `getCurrentUser()` for real Supabase Auth — tracked in Prompt 10
 - [ ] [BILLING] Integrate Stripe for Monthly/Lifetime plans — tracked in Prompt 10
+- [ ] [BILLING] Lifetime-Plan Fairness & LLM Cost Exposure (Prompt 08): Define 'lifetime' explicitly as the commercial operating lifetime of the Iosnapchart SaaS product. Uncapped lifetime access exposes the business to unbounded Gemini vision API token expenses ($0.001–$0.01+ per multi-timeframe chart run). Mitigation strategy: Enforce a strict daily fair-use cap (currently 50 analyses/day) enforced in code via `credit_ledger` and `canAnalyze()`, state this cap visibly in pricing copy and Terms of Service, and retain the right to suspend accounts attempting automated headless scraping.
 - [ ] [LEGAL] Founder: get legal review of SEBI research-analyst / investment-adviser rules before Indian launch — see `docs/QUESTIONS.md`
 - [ ] [LEGAL] Founder: confirm exact USD prices for Monthly ($39) and Lifetime ($179) before enabling checkout
 - [ ] [INFRA] Replace hand-written `supabase/types.ts` with `supabase gen types typescript --local` output after migrations run

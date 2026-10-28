@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/server/auth";
-import { getEntitlement } from "@/server/billing";
+import { canAnalyze } from "@/server/billing";
 import { createAnalysis } from "@/server/analysis/pipeline";
 import { validateTvLink } from "@/server/ai/schema";
 import { supabaseServer } from "@/lib/supabase/server";
@@ -18,9 +18,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check entitlement before processing
-    const entitlement = await getEntitlement(user.id);
-    if (!entitlement.canAnalyse) {
+    // Check entitlement and fair-use limits before processing
+    const check = await canAnalyze(user.id);
+    if (!check.ok) {
+      if (check.reason === "DAILY_CAP") {
+        return NextResponse.json(
+          {
+            error: "Daily analysis limit reached. Please try again tomorrow or upgrade your plan.",
+            code: "DAILY_CAP_REACHED",
+          },
+          { status: 429 }
+        );
+      }
       return NextResponse.json(
         {
           error: "No credits remaining. Upgrade your plan to continue analyzing charts.",

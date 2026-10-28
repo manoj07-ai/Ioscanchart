@@ -13,6 +13,7 @@ import {
 import { GuidedTour } from "@/components/app/GuidedTour";
 import { EmptyExplainer } from "@/components/app/EmptyExplainer";
 import { StagedProgress } from "@/components/app/StagedProgress";
+import { UpgradeDialog } from "@/components/billing/UpgradeDialog";
 import { validateTvLink } from "@/server/ai/schema";
 import { MARKET_PACK_LIST } from "@/config/markets";
 import { cn } from "@/lib/utils/cn";
@@ -73,6 +74,7 @@ export function ChartUploader() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [unreadableModalOpen, setUnreadableModalOpen] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [paywallReason, setPaywallReason] = useState<"NO_CREDITS" | "DAILY_CAP">("NO_CREDITS");
 
   // Save account prefs on change
   const handleAccountSizeChange = (val: string) => {
@@ -236,6 +238,14 @@ export function ChartUploader() {
       });
 
       if (res.status === 402) {
+        setPaywallReason("NO_CREDITS");
+        setUpgradeModalOpen(true);
+        setSubmitting(false);
+        return;
+      }
+
+      if (res.status === 429) {
+        setPaywallReason("DAILY_CAP");
         setUpgradeModalOpen(true);
         setSubmitting(false);
         return;
@@ -613,39 +623,12 @@ export function ChartUploader() {
         </DialogContent>
       </Dialog>
 
-      {/* Modal: Upgrade Plan Paywall */}
-      <Dialog
+      {/* Modal: Upgrade Plan Paywall (Prompt 08) */}
+      <UpgradeDialog
         open={upgradeModalOpen}
         onOpenChange={setUpgradeModalOpen}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Analysis Credits Exhausted</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-xs text-[var(--text-1)] leading-relaxed">
-              You have used all available analysis credits on your current plan. Upgrade to the Monthly or Lifetime plan for unlimited chart breakdowns and all 8 market packs.
-            </p>
-
-            <div className="flex justify-end gap-2 pt-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setUpgradeModalOpen(false)}
-              >
-                Close
-              </Button>
-              <Button
-                variant="primary-gradient"
-                size="sm"
-                onClick={() => router.push("/app/upgrade")}
-              >
-                View Plans & Upgrade
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+        reason={paywallReason}
+      />
     </div>
   );
 }

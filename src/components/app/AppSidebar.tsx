@@ -305,12 +305,19 @@ export function AppSidebar({
             <div className="rounded-lg p-3 bg-[var(--bg-2)] border border-[var(--line)] space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[var(--text-0)]">{planName}</span>
-                <Badge variant={creditsRemaining > 0 ? "bull" : "amber"} className="text-[10px] px-1.5 py-0">
-                  {creditsRemaining} credit{creditsRemaining === 1 ? "" : "s"}
+                <Badge
+                  variant={planName !== "Demo plan" || (creditsRemaining ?? 0) > 0 ? "bull" : "amber"}
+                  className="text-[10px] px-1.5 py-0"
+                >
+                  {planName !== "Demo plan"
+                    ? "Unlimited"
+                    : `${creditsRemaining ?? 0} credit${creditsRemaining === 1 ? "" : "s"}`}
                 </Badge>
               </div>
               <p className="text-[11px] text-[var(--text-2)] leading-tight">
-                {creditsRemaining > 0
+                {planName !== "Demo plan"
+                  ? "Unlimited chart analyses with fair-use daily allowance."
+                  : (creditsRemaining ?? 0) > 0
                   ? "Credits refresh on billing cycle or on new pack purchase."
                   : "You have used your free analysis credit."}
               </p>

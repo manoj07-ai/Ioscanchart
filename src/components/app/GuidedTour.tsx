@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 
 interface TourStep {
@@ -25,15 +25,18 @@ const STEPS: TourStep[] = [
 ];
 
 export function GuidedTour() {
-  const [isOpen, setIsOpen] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return !localStorage.getItem("ioscan_tour_seen");
-    } catch {
-      return false;
-    }
-  });
+  const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem("ioscan_tour_seen")) {
+        setIsOpen(true);
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
 
   const dismiss = () => {
     setIsOpen(false);

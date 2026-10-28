@@ -14,7 +14,7 @@
  */
 
 import { supabaseServer } from "@/lib/supabase/server";
-import { consumeCredit } from "@/server/billing";
+import { consumeCredit, refundCredit } from "@/server/billing";
 import { analyzeImages, PROMPT_VERSION } from "@/server/ai/gemini";
 import {
   AnalysisResultSchema,
@@ -166,6 +166,18 @@ export async function createAnalysis(
   await Promise.allSettled(storageUploads);
 
   // 4. Run the analysis engine
+  // Track analysis_started event
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabaseServer.from("events") as any).insert({
+      user_id: userId,
+      name: "analysis_started",
+      props: { analysisId, marketHint: selectedMarketPack, hasTvLink: Boolean(tvLink) },
+    });
+  } catch {
+    // Ignore analytics failure
+  }
+
   // Run asynchronously without blocking HTTP if caller wants quick response,
   // or await it. In this pipeline we execute the prompt run and update DB.
   executeAnalysisEngine({
@@ -275,9 +287,11 @@ async function executeAnalysisEngine(opts: {
     // ONLY consume credit if dataQuality.readable === true
     let creditConsumed = false;
     if (finalResult.dataQuality.readable) {
-      creditConsumed = await consumeCredit(userId);
-      if (!creditConsumed) {
-        console.warn(`[pipeline] User ${userId} had insufficient credits after analysis.`);
+      try {
+        await consumeCredit(userId, analysisId);
+        creditConsumed = true;
+      } catch (err) {
+        console.warn(`[pipeline] consumeCredit error for user ${userId}:`, err);
       }
     } else {
       console.log(
@@ -308,12 +322,37 @@ async function executeAnalysisEngine(opts: {
       })
       .eq("id", analysisId);
 
+    // Track analysis_completed event
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabaseServer.from("events") as any).insert({
+        user_id: userId,
+        name: "analysis_completed",
+        props: {
+          analysisId,
+          readable: finalResult.dataQuality.readable,
+          score: finalResult.dataQuality.score,
+          stance: finalResult.plan.stance,
+          creditConsumed,
+        },
+      });
+    } catch {
+      // Ignore analytics failure
+    }
+
     console.log(
       `[pipeline] Completed analysis ${analysisId}: readable=${finalResult.dataQuality.readable} stance=${finalResult.plan.stance} latency=${latencyMs}ms creditConsumed=${creditConsumed}`
     );
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : String(err);
     console.error(`[pipeline] Analysis ${analysisId} failed:`, errorMsg);
+
+    // Refund credit if consumed
+    try {
+      await refundCredit(userId, analysisId);
+    } catch (refundErr) {
+      console.warn(`[pipeline] refundCredit error for ${analysisId}:`, refundErr);
+    }
 
     // Update status to 'failed'
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -324,6 +363,18 @@ async function executeAnalysisEngine(opts: {
         completed_at: new Date().toISOString(),
       })
       .eq("id", analysisId);
+
+    // Track analysis_failed event
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabaseServer.from("events") as any).insert({
+        user_id: userId,
+        name: "analysis_failed",
+        props: { analysisId, error: errorMsg },
+      });
+    } catch {
+      // Ignore analytics failure
+    }
   }
 }
 

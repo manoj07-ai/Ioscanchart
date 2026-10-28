@@ -1,8 +1,23 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("App Workspace & Uploader Flow (Prompt 05)", () => {
+  test.beforeAll(async ({ request }) => {
+    // Ensure test runner has unlimited monthly entitlement
+    await request.post("http://localhost:3000/api/dev/set-plan", {
+      data: { plan: "monthly", credits: 999, resetDailyUsage: true },
+    });
+  });
+
+  test.beforeEach(async ({ page }) => {
+    // Dismiss guided tour in tests to avoid dynamic banner shifts
+    await page.addInitScript(() => {
+      localStorage.setItem("ioscan_tour_seen", "true");
+    });
+  });
+
   test("renders app shell, navigation, and upload inputs", async ({ page }) => {
     await page.goto("http://localhost:3000/app");
+    await page.waitForLoadState("domcontentloaded");
 
     // Shell check: sidebar and new analysis CTA
     await expect(page.getByRole("button", { name: /New analysis/i })).toBeVisible();
@@ -26,6 +41,7 @@ test.describe("App Workspace & Uploader Flow (Prompt 05)", () => {
 
   test("submits TradingView link, displays progress, and redirects to result (AI_MOCK mode)", async ({ page }) => {
     await page.goto("http://localhost:3000/app");
+    await page.waitForLoadState("domcontentloaded");
 
     // Enter a valid TradingView link
     const linkInput = page.getByPlaceholder(/paste TradingView link/i);
