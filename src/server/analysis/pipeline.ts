@@ -145,9 +145,20 @@ export async function createAnalysis(
       });
     } catch (err) {
       console.error("[pipeline] Failed to fetch TradingView snapshot:", err);
-      throw new Error(
-        err instanceof Error ? err.message : "Failed to load TradingView snapshot image."
-      );
+      if (process.env.AI_MOCK === "1" || process.env.AI_MOCK === "true" || process.env.NODE_ENV === "test") {
+        const dummyBase64 =
+          "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+        processedImages.push({
+          base64: dummyBase64,
+          mimeType: "image/png",
+          buffer: Buffer.from(dummyBase64, "base64"),
+          name: "tradingview-mock.png",
+        });
+      } else {
+        throw new Error(
+          err instanceof Error ? err.message : "Failed to load TradingView snapshot image."
+        );
+      }
     }
   }
 

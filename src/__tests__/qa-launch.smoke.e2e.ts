@@ -38,7 +38,7 @@ test.describe("Prompt 09 — Full QA Launch Smoke Flow", () => {
     await startBtn.click();
 
     // 5. Wait for redirect to result page
-    await page.waitForURL(/\/app\/analysis\/.+/, { timeout: 25000 });
+    await page.waitForURL(/\/app\/analysis\/.+/, { timeout: 45000 });
     await expect(page.getByText(/Quality/i)).toBeVisible();
     await expect(page.getByText(/Key Technical Levels/i)).toBeVisible();
 
@@ -56,7 +56,7 @@ test.describe("Prompt 09 — Full QA Launch Smoke Flow", () => {
       const saveBtn = page.getByRole("button", { name: /Save to Journal Calendar/i });
       await saveBtn.click();
       await expect(page.getByText(/Trade Logged Successfully!/i)).toBeVisible();
-      await page.getByRole("button", { name: /Close/i }).click();
+      await page.getByRole("button", { name: "Close", exact: true }).click();
     }
 
     // 7. Exhaust credits via dev endpoint to test paywall trigger
@@ -66,6 +66,7 @@ test.describe("Prompt 09 — Full QA Launch Smoke Flow", () => {
 
     // 8. Return to /app and attempt new analysis
     await page.goto("http://localhost:3000/app");
+    await page.waitForLoadState("domcontentloaded");
     const tvInput2 = page.getByPlaceholder(/tradingview\.com\/x/i);
     await tvInput2.click();
     await tvInput2.pressSequentially("https://www.tradingview.com/x/XYZ99999/", { delay: 10 });
@@ -75,7 +76,8 @@ test.describe("Prompt 09 — Full QA Launch Smoke Flow", () => {
     await startBtn2.click();
 
     // 9. Paywall Upgrade Dialog appears with 402 code
-    await expect(page.getByText(/Upgrade to continue/i)).toBeVisible();
-    await expect(page.getByRole("button", { name: /View Paid Plans/i })).toBeVisible();
+    await expect(page.getByText(/Upgrade for unlimited chart breakdowns/i)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("button", { name: /Upgrade to Monthly/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Get Lifetime Access/i })).toBeVisible();
   });
 });

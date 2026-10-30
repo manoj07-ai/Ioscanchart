@@ -4,7 +4,11 @@ import { getEntitlement, type Plan } from "@/server/billing";
 import { supabaseServer } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
-  if (process.env.NODE_ENV === "production") {
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.ENABLE_DEV_ADMIN !== "true" &&
+    process.env.AI_MOCK !== "1"
+  ) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

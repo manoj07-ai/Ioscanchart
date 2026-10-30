@@ -249,8 +249,8 @@ export async function analyzeImages(
   input: AnalyzeImagesInput
 ): Promise<AnalyzeImagesOutput> {
   // Mock mode for Playwright / test environments
-  if (process.env.AI_MOCK === "1") {
-    console.log("[gemini] AI_MOCK=1 active, returning mock analysis result");
+  if (process.env.AI_MOCK === "1" || process.env.AI_MOCK === "true") {
+    console.log("[gemini] AI_MOCK active, returning mock analysis result");
     const mockJson = {
       dataQuality: {
         readable: true,
