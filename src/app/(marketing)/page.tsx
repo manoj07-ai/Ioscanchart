@@ -50,6 +50,13 @@ export default function MarketingHomePage() {
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        name: brand.name,
+        url: "https://iosnapchart.com",
+        logo: "https://iosnapchart.com/icon.svg",
+        sameAs: [`https://x.com/${brand.twitter.replace("@", "")}`],
+      },
+      {
         "@type": "SoftwareApplication",
         name: brand.name,
         applicationCategory: "FinanceApplication",

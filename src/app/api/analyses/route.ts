@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/server/auth";
 import { canAnalyze } from "@/server/billing";
 import { createAnalysis } from "@/server/analysis/pipeline";
 import { validateTvLink } from "@/server/ai/schema";
+import { checkRateLimit } from "@/server/security/rate-limit";
 import { supabaseServer } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
@@ -16,6 +17,22 @@ export async function POST(req: NextRequest) {
     const user = await getCurrentUser();
     if (!user || !user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting check (15 requests per minute)
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+    const rateLimit = checkRateLimit(`analysis:${user.id}:${ip}`, 15, 60_000);
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        {
+          error: "Too many analysis requests. Please wait a moment before trying again.",
+          code: "RATE_LIMITED",
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": Math.ceil(rateLimit.resetMs / 1000).toString() },
+        }
+      );
     }
 
     // Check entitlement and fair-use limits before processing
@@ -119,6 +136,22 @@ export async function GET(req: NextRequest) {
     const user = await getCurrentUser();
     if (!user || !user.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting check (15 requests per minute)
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+    const rateLimit = checkRateLimit(`analysis:${user.id}:${ip}`, 15, 60_000);
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        {
+          error: "Too many analysis requests. Please wait a moment before trying again.",
+          code: "RATE_LIMITED",
+        },
+        {
+          status: 429,
+          headers: { "Retry-After": Math.ceil(rateLimit.resetMs / 1000).toString() },
+        }
+      );
     }
 
     const { searchParams } = req.nextUrl;

@@ -22,8 +22,10 @@ import {
   validateTvLink,
   type AnalysisResult,
 } from "@/server/ai/schema";
+import { fetchTradingViewSnapshot } from "./tradingview";
 import { detectMarket, getMarketPackContext } from "@/server/markets/packs";
 import { buildSystemPrompt, buildUserPrompt } from "@/server/ai/prompts";
+import { logAnalysisLifecycle } from "@/server/observability/logger";
 import type { MarketPackId } from "@/config/markets";
 import { DISCLAIMER_SHORT } from "@/config/legal";
 
@@ -72,6 +74,27 @@ async function processImageFiles(
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+
+    // Security: Verify magic bytes to prevent disguised files
+    const isPng = buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47;
+    const isJpg = buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+    const isWebp =
+      buffer[0] === 0x52 &&
+      buffer[1] === 0x49 &&
+      buffer[2] === 0x46 &&
+      buffer[3] === 0x46 &&
+      buffer[8] === 0x57 &&
+      buffer[9] === 0x45 &&
+      buffer[10] === 0x42 &&
+      buffer[11] === 0x50;
+    const isGif = buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x38;
+
+    if (!isPng && !isJpg && !isWebp && !isGif) {
+      throw new Error(
+        `Security check failed for ${file.name}: file signature does not match a valid image format.`
+      );
+    }
+
     const base64 = buffer.toString("base64");
 
     processed.push({
@@ -108,7 +131,25 @@ export async function createAnalysis(
     }
   }
 
-  const processedImages = imageFiles ? await processImageFiles(imageFiles) : [];
+  const processedImages = imageFiles && imageFiles.length > 0 ? await processImageFiles(imageFiles) : [];
+
+  // If TradingView link provided, fetch and parse the snapshot image
+  if (tvLink) {
+    try {
+      const tvSnapshot = await fetchTradingViewSnapshot(tvLink);
+      processedImages.push({
+        base64: tvSnapshot.base64,
+        mimeType: tvSnapshot.mimeType,
+        buffer: Buffer.from(tvSnapshot.base64, "base64"),
+        name: `tradingview-${tvSnapshot.snapshotId}.png`,
+      });
+    } catch (err) {
+      console.error("[pipeline] Failed to fetch TradingView snapshot:", err);
+      throw new Error(
+        err instanceof Error ? err.message : "Failed to load TradingView snapshot image."
+      );
+    }
+  }
 
   // Determine initial market pack
   let selectedMarketPack: MarketPackId = "us-equities";
@@ -340,12 +381,36 @@ async function executeAnalysisEngine(opts: {
       // Ignore analytics failure
     }
 
+    logAnalysisLifecycle({
+      analysisId,
+      userId,
+      marketPack: detectedMarketPack,
+      stage: "completed",
+      latencyMs,
+      costUsd: usage.costUsd,
+      tokenUsage: {
+        inputTokens: usage.inputTokens,
+        outputTokens: usage.outputTokens,
+        totalTokens: usage.totalTokens,
+      },
+      outcome: finalResult.plan.stance,
+      dataQualityScore: finalResult.dataQuality.score,
+    });
+
     console.log(
       `[pipeline] Completed analysis ${analysisId}: readable=${finalResult.dataQuality.readable} stance=${finalResult.plan.stance} latency=${latencyMs}ms creditConsumed=${creditConsumed}`
     );
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : String(err);
     console.error(`[pipeline] Analysis ${analysisId} failed:`, errorMsg);
+
+    logAnalysisLifecycle({
+      analysisId,
+      userId,
+      marketPack: marketHint,
+      stage: "failed",
+      error: errorMsg,
+    });
 
     // Refund credit if consumed
     try {

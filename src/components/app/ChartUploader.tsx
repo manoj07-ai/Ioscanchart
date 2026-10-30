@@ -16,6 +16,7 @@ import { GuidedTour } from "@/components/app/GuidedTour";
 import { EmptyExplainer } from "@/components/app/EmptyExplainer";
 import { StagedProgress } from "@/components/app/StagedProgress";
 import { UpgradeDialog } from "@/components/billing/UpgradeDialog";
+import { TradingViewLogo } from "@/components/brand/TradingViewLogo";
 import { validateTvLink } from "@/server/ai/schema";
 import { MARKET_PACK_LIST } from "@/config/markets";
 import { cn } from "@/lib/utils/cn";
@@ -45,6 +46,14 @@ export function ChartUploader() {
   const [images, setImages] = useState<UploadedItem[]>([]);
   const [tvLink, setTvLink] = useState("");
   const [tvLinkValid, setTvLinkValid] = useState<boolean | null>(null);
+  const [ageConsent, setAgeConsent] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return localStorage.getItem("ioscan_age_consent") === "true";
+    } catch {
+      return false;
+    }
+  });
 
   // Fine-tune controls
   const [showFineTune, setShowFineTune] = useState(false);
@@ -364,7 +373,8 @@ export function ChartUploader() {
     [router]
   );
 
-  const canSubmit = images.length > 0 || (tvLink.length > 0 && tvLinkValid === true);
+  const canSubmit =
+    (images.length > 0 || (tvLink.length > 0 && tvLinkValid === true)) && ageConsent;
 
   if (submitting && activeAnalysisId) {
     return (
@@ -505,32 +515,62 @@ export function ChartUploader() {
       )}
 
       {/* TradingView share link import */}
-      <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-        <div className="relative flex-1">
+      <div className="mt-5 space-y-2">
+        <div className="flex items-center gap-2 text-xs font-semibold text-[var(--text-0)]">
+          <TradingViewLogo className="w-4 h-4 text-[var(--text-1)]" />
+          <span>TradingView chart link</span>
+        </div>
+
+        <div className="relative">
+          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-2)]">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+              />
+            </svg>
+          </div>
+
           <input
             type="url"
             value={tvLink}
             onChange={handleTvLinkChange}
-            placeholder="Or paste TradingView link (https://www.tradingview.com/x/...)"
+            placeholder="https://www.tradingview.com/x/..."
             className={cn(
-              "w-full h-10 px-3.5 text-xs bg-[var(--bg-1)] border rounded-lg text-[var(--text-0)] transition-colors focus:outline-hidden",
+              "w-full h-11 pl-10 pr-24 text-xs font-mono bg-[var(--bg-1)] border rounded-lg text-[var(--text-0)] transition-colors focus:outline-hidden",
               tvLinkValid === true
-                ? "border-[var(--candle)] focus:border-[var(--candle)]"
+                ? "border-[var(--candle)] focus:border-[var(--candle)] ring-1 ring-[var(--candle)]/30"
                 : tvLinkValid === false
-                ? "border-[var(--bear)] focus:border-[var(--bear)]"
+                ? "border-[var(--bear)] focus:border-[var(--bear)] ring-1 ring-[var(--bear)]/30"
                 : "border-[var(--line)] focus:border-[var(--candle)]"
             )}
           />
+
           {tvLink && (
-            <span className="absolute right-3 top-2.5 text-xs">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono">
               {tvLinkValid === true ? (
-                <span className="text-[var(--candle)] font-bold">✓ Valid TV link</span>
+                <span className="text-[var(--candle)] font-semibold flex items-center gap-1">
+                  <span>✓</span> Valid
+                </span>
               ) : tvLinkValid === false ? (
-                <span className="text-[var(--bear)] font-bold">✕ Invalid URL</span>
+                <span className="text-[var(--bear)] font-semibold flex items-center gap-1">
+                  <span>✕</span> Invalid URL
+                </span>
               ) : null}
             </span>
           )}
         </div>
+
+        <p className="text-[11px] text-[var(--text-2)]">
+          Use the camera share link from TradingView to import your chart.
+        </p>
       </div>
 
       {/* Collapsible Fine-Tune Controls */}
@@ -627,8 +667,29 @@ export function ChartUploader() {
         </p>
       </div>
 
+      {/* 18+ and Educational Disclaimer Consent Checkbox */}
+      <div className="mt-6 p-3 rounded-lg border border-[var(--line)] bg-[var(--bg-1)] flex items-start gap-2.5 text-xs text-[var(--text-1)]">
+        <input
+          type="checkbox"
+          id="age-consent"
+          checked={ageConsent}
+          onChange={(e) => {
+            setAgeConsent(e.target.checked);
+            if (typeof window !== "undefined") {
+              try {
+                localStorage.setItem("ioscan_age_consent", String(e.target.checked));
+              } catch {}
+            }
+          }}
+          className="mt-0.5 rounded border-[var(--line-strong)] text-[var(--candle)] focus:ring-[var(--candle)] cursor-pointer"
+        />
+        <label htmlFor="age-consent" className="cursor-pointer leading-relaxed text-[11px] text-[var(--text-2)]">
+          I confirm I am <strong className="text-[var(--text-0)] font-semibold">18+ years of age</strong> and acknowledge that IoSnapChart provides <strong className="text-[var(--text-0)] font-semibold">educational technical analysis only</strong>, not financial or investment advice.
+        </label>
+      </div>
+
       {/* Action CTA */}
-      <div className="mt-8 flex items-center justify-end gap-3">
+      <div className="mt-6 flex items-center justify-end gap-3">
         <Button
           variant="primary-gradient"
           size="lg"

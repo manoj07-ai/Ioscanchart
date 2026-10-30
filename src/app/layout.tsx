@@ -33,7 +33,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         style={{ fontFamily: "var(--font-geist-sans, var(--font-ui))" }}
       >
-        {children}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--candle)] focus:text-black focus:font-semibold focus:rounded-md focus:shadow-lg focus:outline-hidden"
+        >
+          Skip to main content
+        </a>
+        <div id="main-content">{children}</div>
       </body>
     </html>
   );

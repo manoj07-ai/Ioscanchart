@@ -9,9 +9,10 @@ test.describe("App Workspace & Uploader Flow (Prompt 05)", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    // Dismiss guided tour in tests to avoid dynamic banner shifts
+    // Dismiss guided tour and accept age consent in tests
     await page.addInitScript(() => {
       localStorage.setItem("ioscan_tour_seen", "true");
+      localStorage.setItem("ioscan_age_consent", "true");
     });
   });
 
@@ -44,12 +45,12 @@ test.describe("App Workspace & Uploader Flow (Prompt 05)", () => {
     await page.waitForLoadState("domcontentloaded");
 
     // Enter a valid TradingView link
-    const linkInput = page.getByPlaceholder(/paste TradingView link/i);
+    const linkInput = page.getByPlaceholder(/tradingview\.com\/x/i);
     await linkInput.click();
     await linkInput.pressSequentially("https://www.tradingview.com/x/ABC12345/", { delay: 20 });
 
     // Validation indicator appears
-    await expect(page.getByText(/Valid TV link/i)).toBeVisible();
+    await expect(page.getByText(/Valid/i).first()).toBeVisible();
 
     // Start button becomes enabled
     const startBtn = page.getByRole("button", { name: /Start analysis/i });

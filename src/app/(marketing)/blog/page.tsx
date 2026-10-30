@@ -45,6 +45,33 @@ const POSTS = [
     date: "October 2026",
     tag: "Analytics",
   },
+  {
+    slug: "how-to-take-a-chart-screenshot-ai-can-read",
+    title: "How to Take a Chart Screenshot AI Can Read",
+    description:
+      "Master the 5 essential screenshot habits that ensure multimodal AI models accurately detect ticker symbols, timeframes, price scales, and indicator readings.",
+    readTime: "5 min read",
+    date: "October 2026",
+    tag: "Image Hygiene",
+  },
+  {
+    slug: "reading-an-option-chain-oi-pcr-max-pain",
+    title: "Reading an Option Chain: Open Interest (OI), PCR, and Max Pain",
+    description:
+      "A practitioner's guide to deciphering option chains in Indian and US markets. Learn how Open Interest build-up and Max Pain identify institutional support and resistance.",
+    readTime: "7 min read",
+    date: "October 2026",
+    tag: "Derivatives",
+  },
+  {
+    slug: "why-a-good-plan-starts-with-invalidation",
+    title: "Why a Good Trading Plan Starts With Invalidation, Not Entry",
+    description:
+      "Amateur traders obsess over finding the perfect entry price. Professional traders begin with the invalidation point. Here is why structural invalidation dictates longevity.",
+    readTime: "6 min read",
+    date: "October 2026",
+    tag: "Risk Philosophy",
+  },
 ];
 
 export default function BlogIndexPage() {
