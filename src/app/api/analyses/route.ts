@@ -174,7 +174,23 @@ export async function GET(req: NextRequest) {
       query = query.eq("market_pack", market);
     }
 
-    const { data: rawAnalyses, error } = await query;
+    let { data: rawAnalyses, error } = await query;
+
+    if (error && error.message?.includes("deleted_at")) {
+      // Fallback if deleted_at column has not yet been applied to the remote schema
+      let fallbackQuery = (supabaseServer.from("analyses") as any)
+        .select("id, instrument, market_pack, timeframe, status, created_at, result")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (market !== "all") {
+        fallbackQuery = fallbackQuery.eq("market_pack", market);
+      }
+
+      const fallbackRes = await fallbackQuery;
+      rawAnalyses = fallbackRes.data;
+      error = fallbackRes.error;
+    }
 
     if (error) {
       console.error("[api/analyses GET] Error fetching history:", error);
