@@ -178,6 +178,7 @@ export async function GET(req: NextRequest) {
 
     if (error && error.message?.includes("deleted_at")) {
       // Fallback if deleted_at column has not yet been applied to the remote schema
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let fallbackQuery = (supabaseServer.from("analyses") as any)
         .select("id, instrument, market_pack, timeframe, status, created_at, result")
         .eq("user_id", user.id)

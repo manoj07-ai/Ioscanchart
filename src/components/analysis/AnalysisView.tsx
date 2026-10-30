@@ -13,6 +13,7 @@ import { LogTradeDialog } from "@/components/journal/LogTradeDialog";
 import { SHORT_DISCLAIMER } from "@/config/legal";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { AlertTriangle } from "lucide-react";
 import type { AnalysisResult } from "@/server/ai/schema";
 
 interface AnalysisViewProps {
@@ -72,7 +73,7 @@ export function AnalysisView({ analysisId }: AnalysisViewProps) {
   if (error || !data) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center space-y-4">
-        <div className="text-4xl">⚠️</div>
+        <AlertTriangle className="w-10 h-10 text-[var(--amber)] mx-auto" />
         <h1 className="text-lg font-bold text-[var(--text-0)]">
           {error || "Unable to display analysis"}
         </h1>

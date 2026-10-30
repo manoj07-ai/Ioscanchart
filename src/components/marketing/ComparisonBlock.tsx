@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
+import { Check, X } from "lucide-react";
 
 export function ComparisonBlock() {
   const points = [
@@ -66,10 +67,16 @@ export function ComparisonBlock() {
                         {p.feature}
                       </td>
                       <td className="py-4 px-6 text-[var(--text-2)] leading-relaxed align-top">
-                        <span className="text-[var(--bear)] mr-1.5 font-bold">✕</span> {p.generic}
+                        <div className="flex items-start gap-1.5">
+                          <X className="w-4 h-4 text-[var(--bear)] shrink-0 mt-0.5" />
+                          <span>{p.generic}</span>
+                        </div>
                       </td>
                       <td className="py-4 px-6 text-[var(--text-1)] font-medium leading-relaxed align-top bg-[var(--candle-dim)]/10">
-                        <span className="text-[var(--candle)] mr-1.5 font-bold">✓</span> {p.ours}
+                        <div className="flex items-start gap-1.5">
+                          <Check className="w-4 h-4 text-[var(--candle)] shrink-0 mt-0.5" />
+                          <span>{p.ours}</span>
+                        </div>
                       </td>
                     </tr>
                   ))}

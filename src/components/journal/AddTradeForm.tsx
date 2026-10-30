@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Edit2, Plus } from "lucide-react";
 import { MARKET_PACK_LIST } from "@/config/markets";
 import { MISTAKE_TAGS, COMMON_SETUP_TAGS, type Trade } from "@/lib/journal/schema";
 import { parseAmountInput, deriveFromFills, deriveR } from "@/lib/journal/format";
@@ -182,7 +183,7 @@ export function AddTradeForm({
     <div className="rounded-xl border border-[var(--line)] bg-[var(--bg-1)] p-5 space-y-4 shadow-xs">
       <div className="flex items-center justify-between pb-1">
         <h3 className="text-sm font-bold text-[var(--text-0)] flex items-center gap-2">
-          <span>{initialTrade ? "✏️" : "⚡"}</span>
+          {initialTrade ? <Edit2 className="w-4 h-4 text-[var(--candle)]" /> : <Plus className="w-4 h-4 text-[var(--candle)]" />}
           <span>{initialTrade ? "Edit Trade" : "Add Trade"}</span>
         </h3>
         {initialTrade && onCancelEdit && (
@@ -349,7 +350,7 @@ export function AddTradeForm({
                 >
                   {MARKET_PACK_LIST.map((m) => (
                     <option key={m.id} value={m.id}>
-                      {m.icon} {m.displayName}
+                      {m.displayName}
                     </option>
                   ))}
                 </select>
@@ -465,9 +466,9 @@ export function AddTradeForm({
               </label>
               <div className="flex gap-2">
                 {[
-                  { id: "yes", label: "Yes ✓" },
-                  { id: "partly", label: "Partly ~" },
-                  { id: "no", label: "No ✕" },
+                  { id: "yes", label: "Yes" },
+                  { id: "partly", label: "Partly" },
+                  { id: "no", label: "No" },
                 ].map((opt) => (
                   <button
                     key={opt.id}

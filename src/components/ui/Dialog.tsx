@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 interface DialogContextValue {
@@ -118,10 +119,10 @@ export function DialogContent({
         <button
           type="button"
           onClick={() => ctx.onOpenChange(false)}
-          className="absolute top-4 right-4 text-[var(--text-2)] hover:text-[var(--text-0)] text-lg p-1 rounded-lg transition-colors cursor-pointer"
+          className="absolute top-4 right-4 text-[var(--text-2)] hover:text-[var(--text-0)] p-1 rounded-lg transition-colors cursor-pointer"
           aria-label="Close dialog"
         >
-          ✕
+          <X className="w-4 h-4" />
         </button>
         {children}
       </div>

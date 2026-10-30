@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import { BookOpen, Download } from "lucide-react";
 import { brand } from "@/config/brand";
 import { SHORT_DISCLAIMER } from "@/config/legal";
 import { CalendarPreview } from "@/components/journal/CalendarPreview";
@@ -98,8 +99,8 @@ export default function TradingJournalPillarPage() {
         {/* 1. Hero Section */}
         <section className="text-center space-y-5 pt-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium bg-[var(--bg-2)] border border-[var(--line)] text-[var(--candle)]">
-            <span>📓</span>
-            <span>Comprehensive Trading Journal Guide & Tool</span>
+            <BookOpen className="w-3.5 h-3.5 text-[var(--candle)]" />
+            <span>Comprehensive Trading Journal Guide &amp; Tool</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text-0)] max-w-4xl mx-auto leading-tight">
@@ -107,7 +108,7 @@ export default function TradingJournalPillarPage() {
           </h1>
 
           <p className="text-sm sm:text-base text-[var(--text-2)] max-w-2xl mx-auto leading-relaxed">
-            Discover why elite traders treat their trade log as an operational balance sheet. Track risk, eliminate repetitive mistakes, and visualize your edge with a modern P&L calendar.
+            Discover why elite traders treat their trade log as an operational balance sheet. Track risk, eliminate repetitive mistakes, and visualize your edge with a modern P&amp;L calendar.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
@@ -118,8 +119,9 @@ export default function TradingJournalPillarPage() {
             </Link>
 
             <a href="/downloads/trading-journal-template.csv" download>
-              <Button variant="secondary" size="lg" className="font-medium px-5">
-                Download CSV Template 📥
+              <Button variant="secondary" size="lg" className="font-medium px-5 flex items-center gap-2">
+                <span>Download CSV Template</span>
+                <Download className="w-4 h-4" />
               </Button>
             </a>
           </div>

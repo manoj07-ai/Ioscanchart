@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Trading Journal & Execution Blog | IoSnapChart",
@@ -79,7 +80,7 @@ export default function BlogIndexPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-10">
       <div className="space-y-3">
         <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-[var(--bg-2)] border border-[var(--line)] text-[var(--candle)]">
-          <span>📚</span>
+          <BookOpen className="w-3.5 h-3.5 text-[var(--candle)] shrink-0" />
           <span>IoSnapChart Insights</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-0)] font-sans">

@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader, CardDescription, CardContent, CardFooter } from "@/components/ui/Card";
 import { track } from "@/lib/analytics/track";
+import { Check } from "lucide-react";
 
 export function PricingSection() {
   const { demo, monthly, lifetime } = PLANS;
@@ -56,7 +57,7 @@ export function PricingSection() {
                 <ul className="space-y-2 text-xs text-[var(--text-1)]">
                   {demo.features.map((f) => (
                     <li key={f} className="flex items-start gap-2">
-                      <span className="text-[var(--candle)] font-bold">✓</span>
+                      <Check className="w-3.5 h-3.5 text-[var(--candle)] shrink-0 mt-0.5" />
                       <span>{f}</span>
                     </li>
                   ))}
@@ -113,7 +114,7 @@ export function PricingSection() {
                 <ul className="space-y-2 text-xs text-[var(--text-1)]">
                   {monthly.features.map((f) => (
                     <li key={f} className="flex items-start gap-2">
-                      <span className="text-[var(--candle)] font-bold">✓</span>
+                      <Check className="w-3.5 h-3.5 text-[var(--candle)] shrink-0 mt-0.5" />
                       <span>{f}</span>
                     </li>
                   ))}
@@ -161,7 +162,7 @@ export function PricingSection() {
                 <ul className="space-y-2 text-xs text-[var(--text-1)]">
                   {lifetime.features.map((f) => (
                     <li key={f} className="flex items-start gap-2">
-                      <span className="text-[var(--candle)] font-bold">✓</span>
+                      <Check className="w-3.5 h-3.5 text-[var(--candle)] shrink-0 mt-0.5" />
                       <span>{f}</span>
                     </li>
                   ))}

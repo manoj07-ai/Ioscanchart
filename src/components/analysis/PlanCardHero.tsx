@@ -7,6 +7,7 @@ import { RiskRewardBar } from "@/components/analysis/primitives/RiskRewardBar";
 import { SHORT_DISCLAIMER } from "@/config/legal";
 import { brand } from "@/config/brand";
 import { toPng } from "html-to-image";
+import { AlertTriangle, Check, ArrowUpRight, ArrowDownRight, Copy, Download } from "lucide-react";
 
 interface PlanCardHeroProps {
   plan: {
@@ -141,8 +142,9 @@ ${SHORT_DISCLAIMER}
 
         <div className="flex items-center justify-between pt-2 border-t border-[var(--line)] text-xs text-[var(--text-2)]">
           <span>{SHORT_DISCLAIMER}</span>
-          <Button variant="secondary" size="sm" onClick={handleCopyPlan}>
-            {copySuccess ? "Copied! ✓" : "Copy condition"}
+          <Button variant="secondary" size="sm" onClick={handleCopyPlan} className="flex items-center gap-1.5">
+            {copySuccess ? <Check className="w-3.5 h-3.5 text-[var(--candle)]" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>{copySuccess ? "Copied" : "Copy condition"}</span>
           </Button>
         </div>
       </div>
@@ -167,13 +169,23 @@ ${SHORT_DISCLAIMER}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span
-            className={`px-3 py-1 rounded-md font-mono text-sm font-black uppercase tracking-wider ${
+            className={`px-3 py-1 rounded-md font-mono text-sm font-black uppercase tracking-wider flex items-center gap-1.5 ${
               isLong
                 ? "bg-[var(--candle)]/20 text-[var(--candle)] border border-[var(--candle)]/40"
                 : "bg-[var(--bear)]/20 text-[var(--bear)] border border-[var(--bear)]/40"
             }`}
           >
-            {isLong ? "▲ Long Setup" : "▼ Short Setup"}
+            {isLong ? (
+              <>
+                <ArrowUpRight className="w-4 h-4" />
+                <span>Long Setup</span>
+              </>
+            ) : (
+              <>
+                <ArrowDownRight className="w-4 h-4" />
+                <span>Short Setup</span>
+              </>
+            )}
           </span>
           <span className="text-xs text-[var(--text-2)] font-mono">
             {symbol} · {timeframe}
@@ -181,17 +193,19 @@ ${SHORT_DISCLAIMER}
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={handleCopyPlan} className="text-xs h-8">
-            {copySuccess ? "Copied! ✓" : "Copy plan"}
+          <Button variant="ghost" size="sm" onClick={handleCopyPlan} className="text-xs h-8 flex items-center gap-1.5">
+            {copySuccess ? <Check className="w-3.5 h-3.5 text-[var(--candle)]" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>{copySuccess ? "Copied" : "Copy plan"}</span>
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleDownloadImage}
             disabled={downloading}
-            className="text-xs h-8"
+            className="text-xs h-8 flex items-center gap-1.5"
           >
-            {downloading ? "Saving..." : "Save image"}
+            <Download className="w-3.5 h-3.5" />
+            <span>{downloading ? "Saving..." : "Save image"}</span>
           </Button>
           {onAddToJournal && (
             <Button variant="secondary" size="sm" onClick={onAddToJournal} className="text-xs h-8">
@@ -260,7 +274,8 @@ ${SHORT_DISCLAIMER}
       {/* Invalidation Callout */}
       <div className="p-3.5 rounded-lg border border-[var(--amber)]/30 bg-[var(--amber)]/10 space-y-1 text-xs">
         <div className="font-bold text-[var(--amber)] flex items-center gap-1.5">
-          <span>⚠️ Invalidation Condition</span>
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+          <span>Invalidation Condition</span>
         </div>
         <p className="text-[var(--text-1)] leading-relaxed text-xs">
           {plan.invalidation}

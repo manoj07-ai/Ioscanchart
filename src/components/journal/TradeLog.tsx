@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatMoney } from "@/lib/journal/format";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { BookOpen, Zap, FileText, Edit2, Copy, Trash2 } from "lucide-react";
 import type { Trade } from "@/lib/journal/schema";
 
 interface TradeLogProps {
@@ -77,7 +78,7 @@ export function TradeLog({
   if (trades.length === 0) {
     return (
       <div className="rounded-xl border border-[var(--line)] bg-[var(--bg-1)] p-8 text-center space-y-3">
-        <div className="text-3xl">📓</div>
+        <BookOpen className="w-8 h-8 text-[var(--candle)] mx-auto mb-1" />
         <h3 className="text-sm font-bold text-[var(--text-0)]">No trades yet</h3>
         <p className="text-xs text-[var(--text-2)] max-w-sm mx-auto leading-relaxed">
           Add your first trade above to start your journal and see your month come to life.
@@ -87,9 +88,10 @@ export function TradeLog({
             variant="secondary"
             size="sm"
             onClick={onLoadSampleData}
-            className="text-xs"
+            className="text-xs flex items-center gap-1.5 mx-auto"
           >
-            Preview with sample data ⚡
+            <Zap className="w-3.5 h-3.5" />
+            <span>Preview with sample data</span>
           </Button>
         </div>
       </div>
@@ -102,7 +104,7 @@ export function TradeLog({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-[var(--text-0)] flex items-center gap-2">
-            <span>📋</span>
+            <FileText className="w-4 h-4 text-[var(--candle)]" />
             <span>Trade Log ({filteredTrades.length})</span>
           </h3>
         </div>
@@ -293,21 +295,21 @@ export function TradeLog({
                             className="p-1 rounded text-[var(--text-2)] hover:text-[var(--text-0)] hover:bg-[var(--bg-3)] cursor-pointer"
                             title="Edit trade"
                           >
-                            ✎
+                            <Edit2 className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => onDuplicateTrade(trade)}
                             className="p-1 rounded text-[var(--text-2)] hover:text-[var(--text-0)] hover:bg-[var(--bg-3)] cursor-pointer"
                             title="Duplicate trade"
                           >
-                            ⧉
+                            <Copy className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => trade.id && onDeleteTrade(trade.id)}
                             className="p-1 rounded text-[var(--text-2)] hover:text-red-400 hover:bg-[var(--bg-3)] cursor-pointer"
                             title="Delete trade"
                           >
-                            🗑️
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>

@@ -15,6 +15,7 @@ import {
   DialogDescription,
 } from "@/components/ui/Dialog";
 import { cn } from "@/lib/utils/cn";
+import { Zap } from "lucide-react";
 
 export interface AnalysisHistoryItem {
   id: string;
@@ -392,7 +393,7 @@ export function AppSidebar({
             <div className="flex justify-center">
               <Link href="/app/upgrade" title="Upgrade plan">
                 <div className="w-8 h-8 rounded-md bg-[var(--bg-2)] flex items-center justify-center text-[var(--candle)] border border-[var(--line)] hover:border-[var(--candle)] transition-colors">
-                  ⚡
+                  <Zap className="w-4 h-4" />
                 </div>
               </Link>
             </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { AlertTriangle } from "lucide-react";
 
 export function LegalDraftBanner() {
   const showBanner = process.env.NEXT_PUBLIC_LEGAL_DRAFT_BANNER !== "false";
@@ -8,7 +9,7 @@ export function LegalDraftBanner() {
   return (
     <div className="p-4 sm:p-5 rounded-xl border border-[var(--amber)]/40 bg-[var(--amber)]/10 space-y-3 my-6">
       <div className="flex items-center gap-2 text-xs font-mono font-bold text-[var(--amber)] uppercase tracking-wider">
-        <span>⚠️</span>
+        <AlertTriangle className="w-4 h-4 text-[var(--amber)] shrink-0" />
         <span>DRAFT — Pending Formal Legal Review</span>
       </div>
 

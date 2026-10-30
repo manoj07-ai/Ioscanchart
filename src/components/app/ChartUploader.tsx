@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { X, Check, Settings, Lightbulb, BarChart3, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import {
   Dialog,
@@ -46,14 +47,6 @@ export function ChartUploader() {
   const [images, setImages] = useState<UploadedItem[]>([]);
   const [tvLink, setTvLink] = useState("");
   const [tvLinkValid, setTvLinkValid] = useState<boolean | null>(null);
-  const [ageConsent, setAgeConsent] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return localStorage.getItem("ioscan_age_consent") === "true";
-    } catch {
-      return false;
-    }
-  });
 
   // Fine-tune controls
   const [showFineTune, setShowFineTune] = useState(false);
@@ -373,8 +366,7 @@ export function ChartUploader() {
     [router]
   );
 
-  const canSubmit =
-    (images.length > 0 || (tvLink.length > 0 && tvLinkValid === true)) && ageConsent;
+  const canSubmit = images.length > 0 || (tvLink.length > 0 && tvLinkValid === true);
 
   if (submitting && activeAnalysisId) {
     return (
@@ -488,7 +480,7 @@ export function ChartUploader() {
                   className="absolute top-1.5 right-1.5 h-6 w-6 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center text-xs transition-colors"
                   title="Remove image"
                 >
-                  ✕
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
@@ -557,11 +549,13 @@ export function ChartUploader() {
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono">
               {tvLinkValid === true ? (
                 <span className="text-[var(--candle)] font-semibold flex items-center gap-1">
-                  <span>✓</span> Valid
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Valid</span>
                 </span>
               ) : tvLinkValid === false ? (
                 <span className="text-[var(--bear)] font-semibold flex items-center gap-1">
-                  <span>✕</span> Invalid URL
+                  <X className="w-3.5 h-3.5" />
+                  <span>Invalid URL</span>
                 </span>
               ) : null}
             </span>
@@ -581,14 +575,15 @@ export function ChartUploader() {
           className="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold text-[var(--text-0)] hover:bg-[var(--bg-2)] transition-colors"
         >
           <span className="flex items-center gap-2">
-            <span>⚙ Fine-tune analysis (optional)</span>
+            <Settings className="w-3.5 h-3.5 text-[var(--text-2)]" />
+            <span>Fine-tune analysis (optional)</span>
             <span className="text-[11px] text-[var(--text-2)] font-normal">
               Market pack, account size & risk %
             </span>
           </span>
-          <span className={cn("transition-transform duration-200", showFineTune && "rotate-180")}>
-            ▼
-          </span>
+          <ChevronDown
+            className={cn("w-4 h-4 text-[var(--text-2)] transition-transform duration-200", showFineTune && "rotate-180")}
+          />
         </button>
 
         {showFineTune && (
@@ -658,34 +653,13 @@ export function ChartUploader() {
       {/* Tip & Coverage lines */}
       <div className="mt-4 space-y-1.5">
         <p className="text-[11px] text-[var(--text-2)] flex items-center gap-1.5">
-          <span className="text-[var(--candle)]">💡</span>
+          <Lightbulb className="w-3.5 h-3.5 text-[var(--candle)] shrink-0" />
           <span>Tip: Keep the ticker, timeframe, and price scale visible for the clearest and most accurate analysis.</span>
         </p>
         <p className="text-[11px] text-[var(--text-2)]">
           Supported: US Equities, Forex, Crypto, Commodities, Global Indices, and{" "}
           <strong className="text-[var(--text-1)]">India indices & options (Beta)</strong>.
         </p>
-      </div>
-
-      {/* 18+ and Educational Disclaimer Consent Checkbox */}
-      <div className="mt-6 p-3 rounded-lg border border-[var(--line)] bg-[var(--bg-1)] flex items-start gap-2.5 text-xs text-[var(--text-1)]">
-        <input
-          type="checkbox"
-          id="age-consent"
-          checked={ageConsent}
-          onChange={(e) => {
-            setAgeConsent(e.target.checked);
-            if (typeof window !== "undefined") {
-              try {
-                localStorage.setItem("ioscan_age_consent", String(e.target.checked));
-              } catch {}
-            }
-          }}
-          className="mt-0.5 rounded border-[var(--line-strong)] text-[var(--candle)] focus:ring-[var(--candle)] cursor-pointer"
-        />
-        <label htmlFor="age-consent" className="cursor-pointer leading-relaxed text-[11px] text-[var(--text-2)]">
-          I confirm I am <strong className="text-[var(--text-0)] font-semibold">18+ years of age</strong> and acknowledge that IoSnapChart provides <strong className="text-[var(--text-0)] font-semibold">educational technical analysis only</strong>, not financial or investment advice.
-        </label>
       </div>
 
       {/* Action CTA */}
@@ -706,7 +680,7 @@ export function ChartUploader() {
         <div className="mt-10 pt-8 border-t border-[var(--line)] space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-[var(--text-0)] flex items-center gap-2">
-              <span>📊</span>
+              <BarChart3 className="w-4 h-4 text-[var(--candle)]" />
               <span>Recent Analyses</span>
             </h2>
             <Link

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { Scale, BookOpen, Trash2 } from "lucide-react";
 import { LogTradeDialog } from "./LogTradeDialog";
 import { CumulativeRChart } from "./CumulativeRChart";
 import type { JournalStats, JournalEntryRecord } from "@/server/journal/stats";
@@ -174,7 +175,10 @@ export function JournalView() {
 
       {/* Prominent Legal Clarity Notice */}
       <div className="p-3 rounded-lg bg-[var(--bg-2)]/50 border border-[var(--line)] flex items-center justify-between text-xs font-mono text-[var(--text-2)]">
-        <span>⚖ Your results, not a prediction. Past performance does not guarantee future outcomes.</span>
+        <span className="flex items-center gap-1.5">
+          <Scale className="w-3.5 h-3.5 text-[var(--candle)] shrink-0" />
+          <span>Your results, not a prediction. Past performance does not guarantee future outcomes.</span>
+        </span>
         <span className="text-[10px] hidden sm:inline">Self-reported execution log</span>
       </div>
 
@@ -193,7 +197,7 @@ export function JournalView() {
           </div>
         ) : entries.length === 0 ? (
           <div className="p-12 text-center rounded-xl border border-dashed border-[var(--line)] bg-[var(--bg-1)] space-y-3">
-            <span className="text-3xl block">📖</span>
+            <BookOpen className="w-8 h-8 text-[var(--candle)] mx-auto mb-1" />
             <div className="text-sm font-semibold text-[var(--text-0)]">No journal entries logged yet</div>
             <p className="text-xs text-[var(--text-2)] max-w-sm mx-auto">
               Whenever you execute or skip an analysis plan, record the outcome here to calculate real R-multiples.
@@ -283,7 +287,7 @@ export function JournalView() {
                           className="text-xs text-[var(--text-2)] hover:text-red-400 transition-colors p-1"
                           title="Delete entry"
                         >
-                          ✕
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </td>
                     </tr>

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { BiasPill } from "@/components/analysis/primitives/BiasPill";
 import { Badge } from "@/components/ui/Badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog";
+import { Lightbulb, Check, X } from "lucide-react";
 import { MARKET_PACKS, type MarketPackId } from "@/config/markets";
 
 interface AnalysisHeaderStripProps {
@@ -129,8 +130,18 @@ export function AnalysisHeaderStrip({
                 </li>
                 <li className="p-2 rounded bg-[var(--bg-2)] border border-[var(--line)]">
                   <span className="text-[var(--text-2)] block">Price Scale</span>
-                  <span className="font-mono font-bold text-[var(--text-0)]">
-                    {dataQuality.detected.priceScaleVisible ? "Visible ✓" : "Hidden ✕"}
+                  <span className="font-mono font-bold text-[var(--text-0)] flex items-center gap-1">
+                    {dataQuality.detected.priceScaleVisible ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-[var(--candle)]" />
+                        <span>Visible</span>
+                      </>
+                    ) : (
+                      <>
+                        <X className="w-3.5 h-3.5 text-[var(--bear)]" />
+                        <span>Hidden</span>
+                      </>
+                    )}
                   </span>
                 </li>
                 <li className="p-2 rounded bg-[var(--bg-2)] border border-[var(--line)]">
@@ -156,8 +167,9 @@ export function AnalysisHeaderStrip({
             )}
 
             {dataQuality.userActionNeeded && (
-              <div className="p-2.5 rounded bg-[var(--amber)]/10 border border-[var(--amber)]/20 text-[var(--amber)] text-[11px]">
-                💡 {dataQuality.userActionNeeded}
+              <div className="p-2.5 rounded bg-[var(--amber)]/10 border border-[var(--amber)]/20 text-[var(--amber)] text-[11px] flex items-center gap-1.5">
+                <Lightbulb className="w-3.5 h-3.5 shrink-0" />
+                <span>{dataQuality.userActionNeeded}</span>
               </div>
             )}
           </div>

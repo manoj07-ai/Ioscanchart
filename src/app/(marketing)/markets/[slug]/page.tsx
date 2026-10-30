@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import { AlertTriangle } from "lucide-react";
 import { brand } from "@/config/brand";
 import { MARKET_PACKS, type MarketPackId } from "@/config/markets";
 import { DISCLAIMER_SHORT } from "@/config/legal";
@@ -559,7 +560,7 @@ export default async function ProgrammaticMarketPage(props: { params: Promise<{ 
               className="p-4 rounded-xl border border-[var(--down)]/30 bg-[var(--down)]/5 space-y-1.5"
             >
               <h3 className="text-xs font-bold text-[var(--down)] font-mono flex items-center gap-1.5">
-                <span>⚠️</span>
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                 <span>{pitfall.title}</span>
               </h3>
               <p className="text-xs text-[var(--text-2)] leading-relaxed">

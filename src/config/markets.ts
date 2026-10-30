@@ -37,7 +37,7 @@ export const MARKET_PACKS: Record<MarketPackId, MarketPack> = {
     description: "NYSE, NASDAQ, AMEX stocks and major ETFs (SPY, QQQ, IWM…)",
     exampleTickers: ["AAPL", "TSLA", "NVDA", "SPY", "QQQ"],
     coverage: "full",
-    icon: "🇺🇸",
+    icon: "",
     order: 1,
   },
   forex: {
@@ -47,7 +47,7 @@ export const MARKET_PACKS: Record<MarketPackId, MarketPack> = {
     description: "Major, minor, and exotic currency pairs",
     exampleTickers: ["EURUSD", "GBPJPY", "USDINR", "AUDUSD"],
     coverage: "full",
-    icon: "💱",
+    icon: "",
     order: 2,
   },
   crypto: {
@@ -57,7 +57,7 @@ export const MARKET_PACKS: Record<MarketPackId, MarketPack> = {
     description: "Bitcoin, Ethereum and major altcoins across all timeframes",
     exampleTickers: ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT"],
     coverage: "full",
-    icon: "₿",
+    icon: "",
     order: 3,
   },
   commodities: {
@@ -67,7 +67,7 @@ export const MARKET_PACKS: Record<MarketPackId, MarketPack> = {
     description: "Gold, silver, crude oil, natural gas, and agricultural futures",
     exampleTickers: ["XAUUSD", "XAGUSD", "CL1!", "NG1!", "MCX:GOLD"],
     coverage: "full",
-    icon: "🥇",
+    icon: "",
     order: 4,
   },
   "global-indices": {
@@ -77,7 +77,7 @@ export const MARKET_PACKS: Record<MarketPackId, MarketPack> = {
     description: "US, European, Asian index futures and CFDs",
     exampleTickers: ["ES1!", "NQ1!", "DAX", "FTSE", "Nikkei225"],
     coverage: "full",
-    icon: "🌐",
+    icon: "",
     order: 5,
   },
   "india-indices": {
@@ -87,7 +87,7 @@ export const MARKET_PACKS: Record<MarketPackId, MarketPack> = {
     description: "NIFTY 50, BANKNIFTY, FINNIFTY, MIDCPNIFTY, SENSEX and sector indices",
     exampleTickers: ["NIFTY50", "BANKNIFTY", "FINNIFTY", "SENSEX", "NIFTYMIDCAP150"],
     coverage: "beta",
-    icon: "🇮🇳",
+    icon: "",
     order: 6,
   },
   "india-equities": {
@@ -97,7 +97,7 @@ export const MARKET_PACKS: Record<MarketPackId, MarketPack> = {
     description: "NSE and BSE listed stocks across all market caps",
     exampleTickers: ["RELIANCE", "TCS", "HDFCBANK", "INFY", "ICICIBANK"],
     coverage: "beta",
-    icon: "📈",
+    icon: "",
     order: 7,
   },
   "india-options": {
@@ -108,7 +108,7 @@ export const MARKET_PACKS: Record<MarketPackId, MarketPack> = {
       "Index & stock options: OI analysis, max pain, PCR, payoff diagrams, expiry context",
     exampleTickers: ["NIFTY CE/PE", "BANKNIFTY CE/PE", "FINNIFTY CE/PE", "Stock options"],
     coverage: "beta",
-    icon: "⛓️",
+    icon: "",
     order: 8,
   },
 };

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { formatMoney } from "@/lib/journal/format";
 import { Button } from "@/components/ui/Button";
+import { X, Check, Edit2, Trash2 } from "lucide-react";
 import type { Trade, JournalDay } from "@/lib/journal/schema";
 
 interface DayPanelProps {
@@ -19,12 +20,12 @@ interface DayPanelProps {
   onClose: () => void;
 }
 
-const MOOD_EMOJIS = [
-  { value: 1, emoji: "😫", label: "Tilted / Distressed" },
-  { value: 2, emoji: "😕", label: "Frustrated" },
-  { value: 3, emoji: "😐", label: "Neutral / Balanced" },
-  { value: 4, emoji: "🙂", label: "Calm & Disciplined" },
-  { value: 5, emoji: "🔥", label: "Flow State" },
+const MOOD_RATINGS = [
+  { value: 1, label: "Tilted / Distressed", short: "1" },
+  { value: 2, label: "Frustrated", short: "2" },
+  { value: 3, label: "Neutral / Balanced", short: "3" },
+  { value: 4, label: "Calm & Disciplined", short: "4" },
+  { value: 5, label: "Flow State", short: "5" },
 ];
 
 export function DayPanel({
@@ -94,7 +95,7 @@ export function DayPanel({
           className="text-xs text-[var(--text-2)] hover:text-[var(--text-0)] p-1 rounded hover:bg-[var(--bg-2)] cursor-pointer"
           title="Close day view"
         >
-          ✕
+          <X className="w-4 h-4" />
         </button>
       </div>
 
@@ -130,17 +131,19 @@ export function DayPanel({
             Daily Reflection & Mindset Note
           </label>
           <div className="flex items-center gap-1">
-            {MOOD_EMOJIS.map((m) => (
+            {MOOD_RATINGS.map((m) => (
               <button
                 key={m.value}
                 type="button"
                 onClick={() => setMood(m.value)}
-                className={`text-base p-1 rounded-md transition-transform hover:scale-125 cursor-pointer ${
-                  mood === m.value ? "bg-[var(--bg-3)] ring-1 ring-[var(--candle)] scale-110" : "opacity-60 hover:opacity-100"
+                className={`w-6 h-6 rounded-md font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center ${
+                  mood === m.value
+                    ? "bg-[var(--candle)] text-[#04120A] shadow-xs"
+                    : "bg-[var(--bg-2)] text-[var(--text-2)] hover:text-[var(--text-0)] hover:bg-[var(--bg-3)] border border-[var(--line)]"
                 }`}
                 title={m.label}
               >
-                {m.emoji}
+                {m.short}
               </button>
             ))}
           </div>
@@ -155,8 +158,13 @@ export function DayPanel({
         />
 
         <div className="flex items-center justify-between pt-1">
-          <span className="text-[11px] text-[var(--candle)] font-mono">
-            {noteSavedFeedback ? "Reflection saved ✓" : ""}
+          <span className="text-[11px] text-[var(--candle)] font-mono flex items-center gap-1">
+            {noteSavedFeedback ? (
+              <>
+                <Check className="w-3.5 h-3.5" />
+                <span>Reflection saved</span>
+              </>
+            ) : null}
           </span>
           <Button
             variant="secondary"
@@ -244,14 +252,14 @@ export function DayPanel({
                         className="p-1 text-[var(--text-2)] hover:text-[var(--text-0)] hover:bg-[var(--bg-3)] rounded cursor-pointer"
                         title="Edit trade"
                       >
-                        ✎
+                        <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => trade.id && onDeleteTrade(trade.id)}
                         className="p-1 text-[var(--text-2)] hover:text-red-400 hover:bg-[var(--bg-3)] rounded cursor-pointer"
                         title="Delete trade"
                       >
-                        🗑️
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { Sparkles } from "lucide-react";
 import { formatMoney } from "@/lib/journal/format";
 import { groupInsights, type InsightGroupKey } from "@/lib/journal/insights";
 import type { Trade } from "@/lib/journal/schema";
@@ -48,8 +49,8 @@ export function InsightsTabs({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[var(--line)]">
         <div>
           <h3 className="text-sm font-bold text-[var(--text-0)] flex items-center gap-2">
-            <span>🔬</span>
-            <span>Performance Insights & Breakdown</span>
+            <Sparkles className="w-4 h-4 text-[var(--candle)] shrink-0" />
+            <span>Performance Insights &amp; Breakdown</span>
           </h3>
           <p className="text-[11px] text-[var(--text-2)] mt-0.5">
             Objective pattern detection based solely on your logged execution data.

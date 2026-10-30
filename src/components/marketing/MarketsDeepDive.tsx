@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Globe, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 
@@ -84,7 +85,8 @@ export function MarketsDeepDive() {
             <CardHeader className="border-b border-[var(--line)] py-4 px-6 flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="text-base font-bold text-[var(--text-0)] flex items-center gap-2">
-                  <span>🌐</span> Global Markets
+                  <Globe className="w-4 h-4 text-[var(--candle)] shrink-0" />
+                  <span>Global Markets</span>
                 </CardTitle>
                 <CardDescription className="text-xs">
                   Wall Street, European bourses, Forex, and Crypto
@@ -121,7 +123,8 @@ export function MarketsDeepDive() {
             <CardHeader className="border-b border-[var(--line)] py-4 px-6 flex flex-row items-center justify-between bg-[var(--candle-dim)]/10">
               <div>
                 <CardTitle className="text-base font-bold text-[var(--text-0)] flex items-center gap-2">
-                  <span>🇮🇳</span> Indian Markets &amp; Options
+                  <TrendingUp className="w-4 h-4 text-[var(--candle)] shrink-0" />
+                  <span>Indian Markets &amp; Options</span>
                 </CardTitle>
                 <CardDescription className="text-xs text-[var(--candle)]">
                   Our headline differentiator — Dalal Street first-class support

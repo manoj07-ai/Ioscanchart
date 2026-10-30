@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/Dialog";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Check } from "lucide-react";
 import { formatDateOnly } from "@/lib/journal/calendar";
 import { MISTAKE_TAGS, COMMON_SETUP_TAGS } from "@/lib/journal/schema";
 import type { AnalysisResult } from "@/server/ai/schema";
@@ -176,8 +177,8 @@ export function LogTradeDialog({
 
         {savedSuccess ? (
           <div className="py-6 text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-[var(--candle)]/20 text-[var(--candle)] border border-[var(--candle)]/40 flex items-center justify-center mx-auto text-xl font-bold">
-              ✓
+            <div className="w-12 h-12 rounded-full bg-[var(--candle)]/20 border border-[var(--candle)]/40 flex items-center justify-center mx-auto">
+              <Check className="w-6 h-6 text-[var(--candle)]" />
             </div>
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-[var(--text-0)]">Trade Logged Successfully!</h3>

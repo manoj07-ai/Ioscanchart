@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ArrowLeft, ArrowRight, Check, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { LessonContent } from "@/components/academy/LessonContent";
@@ -67,6 +68,11 @@ export function LessonReader({ lesson, prevLesson, nextLesson }: LessonReaderPro
         updated = currentSlugs.filter((s) => s !== lesson.slug);
       }
       localStorage.setItem("iosnapchart_completed_lessons", JSON.stringify(updated));
+      window.dispatchEvent(
+        new CustomEvent("academy-progress-updated", {
+          detail: { slug: lesson.slug, completed: nextState },
+        })
+      );
     } catch {
       // Ignore
     }
@@ -93,7 +99,7 @@ export function LessonReader({ lesson, prevLesson, nextLesson }: LessonReaderPro
           href="/app/academy"
           className="inline-flex items-center gap-1.5 text-[var(--text-2)] hover:text-[var(--text-0)] transition-colors font-medium"
         >
-          <span>←</span>
+          <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Academy</span>
         </Link>
 
@@ -117,8 +123,9 @@ export function LessonReader({ lesson, prevLesson, nextLesson }: LessonReaderPro
             </span>
           ))}
           {completed && (
-            <Badge variant="bull" size="sm">
-              Completed ✓
+            <Badge variant="bull" size="sm" className="flex items-center gap-1">
+              <Check className="w-3 h-3" />
+              <span>Completed</span>
             </Badge>
           )}
         </div>
@@ -156,9 +163,19 @@ export function LessonReader({ lesson, prevLesson, nextLesson }: LessonReaderPro
             size="md"
             onClick={handleToggleComplete}
             disabled={saving}
-            className="shrink-0 text-xs font-semibold"
+            className="shrink-0 text-xs font-semibold flex items-center gap-1.5"
           >
-            {completed ? "Completed ✓ (Click to reset)" : "Mark as Complete ✓"}
+            {completed ? (
+              <>
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Completed (Click to reset)</span>
+              </>
+            ) : (
+              <>
+                <Check className="w-3.5 h-3.5" />
+                <span>Mark as Complete</span>
+              </>
+            )}
           </Button>
         </div>
 
@@ -169,8 +186,9 @@ export function LessonReader({ lesson, prevLesson, nextLesson }: LessonReaderPro
               href={`/app/academy/${prevLesson.slug}`}
               className="p-4 rounded-xl border border-[var(--line)] bg-[var(--bg-1)] hover:border-[var(--line-strong)] hover:bg-[var(--bg-2)] transition-all group"
             >
-              <div className="text-[10px] font-mono uppercase text-[var(--text-2)]">
-                ← Previous
+              <div className="text-[10px] font-mono uppercase text-[var(--text-2)] flex items-center gap-1">
+                <ArrowLeft className="w-3 h-3" />
+                <span>Previous</span>
               </div>
               <div className="text-xs font-bold text-[var(--text-0)] group-hover:text-[var(--candle)] truncate mt-1">
                 {prevLesson.title}
@@ -185,8 +203,9 @@ export function LessonReader({ lesson, prevLesson, nextLesson }: LessonReaderPro
               href={`/app/academy/${nextLesson.slug}`}
               className="p-4 rounded-xl border border-[var(--line)] bg-[var(--bg-1)] hover:border-[var(--line-strong)] hover:bg-[var(--bg-2)] transition-all text-right group"
             >
-              <div className="text-[10px] font-mono uppercase text-[var(--text-2)]">
-                Next →
+              <div className="text-[10px] font-mono uppercase text-[var(--text-2)] flex items-center justify-end gap-1">
+                <span>Next</span>
+                <ArrowRight className="w-3 h-3" />
               </div>
               <div className="text-xs font-bold text-[var(--text-0)] group-hover:text-[var(--candle)] truncate mt-1">
                 {nextLesson.title}
@@ -200,8 +219,9 @@ export function LessonReader({ lesson, prevLesson, nextLesson }: LessonReaderPro
               <div className="text-[10px] font-mono uppercase text-[var(--text-2)]">
                 Finished
               </div>
-              <div className="text-xs font-bold text-[var(--text-0)] group-hover:text-[var(--candle)] truncate mt-1">
-                Back to Academy Catalog →
+              <div className="text-xs font-bold text-[var(--text-0)] group-hover:text-[var(--candle)] truncate mt-1 flex items-center justify-end gap-1">
+                <span>Back to Academy Catalog</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </Link>
           )}

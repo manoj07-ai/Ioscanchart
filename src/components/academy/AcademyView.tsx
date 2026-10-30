@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { BookOpen, GraduationCap, CheckCircle2, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import type { Lesson } from "@/server/academy/lessons";
 
@@ -12,33 +13,61 @@ interface AcademyViewProps {
 export function AcademyView({ lessons }: AcademyViewProps) {
   const [completedSlugs, setCompletedSlugs] = useState<string[]>([]);
 
-  useEffect(() => {
-    async function loadProgress() {
-      try {
-        const res = await fetch("/api/academy/progress");
-        if (res.ok) {
-          const json = await res.json();
-          if (Array.isArray(json.completedSlugs)) {
-            setCompletedSlugs(json.completedSlugs);
-            return;
-          }
-        }
-      } catch {
-        // Fallback to local storage if API fails
-      }
-
+  const loadProgress = useCallback(async () => {
+    function getMerged(apiSlugs: string[]) {
       try {
         const local = localStorage.getItem("iosnapchart_completed_lessons");
-        if (local) {
-          setCompletedSlugs(JSON.parse(local));
-        }
+        const localSlugs: string[] = local ? JSON.parse(local) : [];
+        return Array.from(new Set([...apiSlugs, ...localSlugs]));
       } catch {
-        // Ignore JSON error
+        return apiSlugs;
       }
     }
 
-    loadProgress();
+    try {
+      const res = await fetch("/api/academy/progress");
+      if (res.ok) {
+        const json = await res.json();
+        if (Array.isArray(json.completedSlugs)) {
+          const merged = getMerged(json.completedSlugs);
+          setCompletedSlugs(merged);
+          try {
+            localStorage.setItem("iosnapchart_completed_lessons", JSON.stringify(merged));
+          } catch {
+            // ignore
+          }
+          return;
+        }
+      }
+    } catch {
+      // Fallback to local storage if API fails
+    }
+
+    try {
+      const local = localStorage.getItem("iosnapchart_completed_lessons");
+      if (local) {
+        setCompletedSlugs(JSON.parse(local));
+      }
+    } catch {
+      // Ignore JSON error
+    }
   }, []);
+
+  useEffect(() => {
+    loadProgress();
+
+    const handleProgressUpdate = () => {
+      loadProgress();
+    };
+
+    window.addEventListener("academy-progress-updated", handleProgressUpdate);
+    window.addEventListener("storage", handleProgressUpdate);
+
+    return () => {
+      window.removeEventListener("academy-progress-updated", handleProgressUpdate);
+      window.removeEventListener("storage", handleProgressUpdate);
+    };
+  }, [loadProgress]);
 
   const total = lessons.length;
   const completedCount = completedSlugs.filter((s) =>
@@ -51,11 +80,11 @@ export function AcademyView({ lessons }: AcademyViewProps) {
       {/* Header section */}
       <div className="space-y-3">
         <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-[var(--bg-2)] border border-[var(--line)] text-[var(--candle)]">
-          <span>📚</span>
+          <BookOpen className="w-3.5 h-3.5 text-[var(--candle)] shrink-0" />
           <span>IoSnapChart Trading Academy</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text-0)]">
-          Master Modern Market Structure & Execution
+          Master Modern Market Structure &amp; Execution
         </h1>
         <p className="text-sm text-[var(--text-2)] max-w-2xl leading-relaxed">
           Concise, high-impact lessons designed to eliminate execution errors, master risk:reward mathematics, and decipher institutional positioning.
@@ -72,8 +101,9 @@ export function AcademyView({ lessons }: AcademyViewProps) {
             </span>
           </div>
           {completedCount === total && total > 0 && (
-            <Badge variant="bull" size="sm">
-              All Lessons Completed 🎓
+            <Badge variant="bull" size="sm" className="flex items-center gap-1.5">
+              <GraduationCap className="w-3.5 h-3.5" />
+              <span>All Lessons Completed</span>
             </Badge>
           )}
         </div>
@@ -99,8 +129,9 @@ export function AcademyView({ lessons }: AcademyViewProps) {
             >
               {isCompleted && (
                 <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden pointer-events-none">
-                  <div className="absolute transform rotate-45 bg-[var(--candle)]/20 text-[var(--candle)] text-[9px] font-mono font-bold py-0.5 right-[-35px] top-[14px] w-[120px] text-center border-b border-[var(--candle)]/40">
-                    DONE ✓
+                  <div className="absolute transform rotate-45 bg-[var(--candle)]/20 text-[var(--candle)] text-[9px] font-mono font-bold py-0.5 right-[-35px] top-[14px] w-[120px] text-center border-b border-[var(--candle)]/40 flex items-center justify-center gap-1">
+                    <CheckCircle2 className="w-2.5 h-2.5 inline" />
+                    <span>DONE</span>
                   </div>
                 </div>
               )}
@@ -137,7 +168,8 @@ export function AcademyView({ lessons }: AcademyViewProps) {
                   </div>
 
                   <span className="text-xs font-semibold text-[var(--candle)] inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                    {isCompleted ? "Review" : "Start"} →
+                    <span>{isCompleted ? "Review" : "Start"}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>

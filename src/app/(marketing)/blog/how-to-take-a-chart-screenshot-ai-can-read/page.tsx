@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { X, Check } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "How to Take a Chart Screenshot AI Can Read (Clean Setup Guide) | IoSnapChart",
@@ -91,11 +92,17 @@ export default function HowToTakeAChartScreenshotPage() {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
           <div className="p-3.5 rounded-lg border border-[var(--down)]/30 bg-[var(--down)]/5 space-y-1">
-            <div className="font-bold text-[var(--down)]">❌ Poor Practice</div>
+            <div className="font-bold text-[var(--down)] flex items-center gap-1.5">
+              <X className="w-3.5 h-3.5" />
+              <span>Poor Practice</span>
+            </div>
             <div className="text-[var(--text-2)]">Snapping a slanted phone camera photo of an LCD display with glare.</div>
           </div>
           <div className="p-3.5 rounded-lg border border-[var(--up)]/30 bg-[var(--up)]/5 space-y-1">
-            <div className="font-bold text-[var(--up)]">✅ Best Practice</div>
+            <div className="font-bold text-[var(--up)] flex items-center gap-1.5">
+              <Check className="w-3.5 h-3.5" />
+              <span>Best Practice</span>
+            </div>
             <div className="text-[var(--text-2)]">Using clean native OS shortcuts (Win+Shift+S or Cmd+Shift+4) or TradingView snapshot URLs.</div>
           </div>
         </div>

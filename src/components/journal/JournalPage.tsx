@@ -14,6 +14,7 @@ import { ShareMonthDialog } from "./ShareMonthDialog";
 import { ImportCsvDialog } from "./ImportCsvDialog";
 import { SettingsDialog } from "./SettingsDialog";
 import { Button } from "@/components/ui/Button";
+import { Eye, EyeOff, Upload, Download, Settings } from "lucide-react";
 import { computeStats } from "@/lib/journal/stats";
 import { generateSampleTrades } from "@/lib/journal/sample-data";
 import { formatDateOnly } from "@/lib/journal/calendar";
@@ -336,14 +337,24 @@ export function JournalPage({ repository: propRepo, mode = "api", isGuest = fals
           {/* Privacy Blur Toggle */}
           <button
             onClick={() => setPrivacyBlur(!privacyBlur)}
-            className={`p-2 rounded-lg border text-xs font-mono transition-colors cursor-pointer ${
+            className={`p-2 rounded-lg border text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 ${
               privacyBlur
                 ? "bg-[var(--candle)]/20 border-[var(--candle)]/40 text-[var(--candle)]"
                 : "bg-[var(--bg-2)] border-[var(--line)] text-[var(--text-2)] hover:text-[var(--text-0)]"
             }`}
             title="Privacy Mode: Blur monetary figures"
           >
-            {privacyBlur ? "👁️‍🗨️ Blurred" : "👁️ Visible"}
+            {privacyBlur ? (
+              <>
+                <EyeOff className="w-3.5 h-3.5" />
+                <span>Blurred</span>
+              </>
+            ) : (
+              <>
+                <Eye className="w-3.5 h-3.5" />
+                <span>Visible</span>
+              </>
+            )}
           </button>
 
           {/* Actions Menu */}
@@ -352,10 +363,11 @@ export function JournalPage({ repository: propRepo, mode = "api", isGuest = fals
               variant="secondary"
               size="sm"
               onClick={() => setImportOpen(true)}
-              className="text-xs h-9"
+              className="text-xs h-9 flex items-center gap-1.5"
               title="Import trades from CSV"
             >
-              Import CSV 📥
+              <Upload className="w-3.5 h-3.5" />
+              <span>Import CSV</span>
             </Button>
 
             <a
@@ -365,10 +377,11 @@ export function JournalPage({ repository: propRepo, mode = "api", isGuest = fals
               <Button
                 variant="secondary"
                 size="sm"
-                className="text-xs h-9"
+                className="text-xs h-9 flex items-center gap-1.5"
                 title="Export trades to CSV"
               >
-                Export CSV 📤
+                <Download className="w-3.5 h-3.5" />
+                <span>Export CSV</span>
               </Button>
             </a>
 
@@ -376,10 +389,10 @@ export function JournalPage({ repository: propRepo, mode = "api", isGuest = fals
               variant="secondary"
               size="sm"
               onClick={() => setSettingsOpen(true)}
-              className="text-xs h-9 px-2.5"
+              className="text-xs h-9 px-2.5 flex items-center justify-center"
               title="Journal settings"
             >
-              ⚙️
+              <Settings className="w-4 h-4 text-[var(--text-2)]" />
             </Button>
           </div>
         </div>

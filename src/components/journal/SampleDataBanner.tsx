@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { AlertTriangle, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 interface SampleDataBannerProps {
@@ -11,7 +12,7 @@ export function SampleDataBanner({ onClear }: SampleDataBannerProps) {
   return (
     <div className="rounded-xl border border-[var(--amber)]/40 bg-[var(--amber)]/10 p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
       <div className="flex items-center gap-2.5">
-        <span className="text-base">⚠️</span>
+        <AlertTriangle className="w-4 h-4 text-[var(--amber)] shrink-0" />
         <div>
           <span className="font-bold text-[var(--amber)] block">
             Preview Mode: Sample Data Active
@@ -26,9 +27,10 @@ export function SampleDataBanner({ onClear }: SampleDataBannerProps) {
         variant="secondary"
         size="sm"
         onClick={onClear}
-        className="shrink-0 text-xs h-8 px-3 border-[var(--amber)]/40 hover:bg-[var(--amber)]/20"
+        className="shrink-0 text-xs h-8 px-3 border-[var(--amber)]/40 hover:bg-[var(--amber)]/20 flex items-center gap-1.5"
       >
-        Clear Sample Data ✕
+        <span>Clear Sample Data</span>
+        <X className="w-3.5 h-3.5" />
       </Button>
     </div>
   );

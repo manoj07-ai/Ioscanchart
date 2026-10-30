@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import { Shield, Calendar, Target, Tag } from "lucide-react";
 import { JournalPage } from "@/components/journal/JournalPage";
 import { brand } from "@/config/brand";
 
@@ -54,7 +55,7 @@ export default function GuestJournalToolPage() {
         {/* Tool Header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-2 space-y-2">
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-[var(--bg-2)] border border-[var(--line)] text-[var(--candle)]">
-            <span>🛡️</span>
+            <Shield className="w-3.5 h-3.5 text-[var(--candle)] shrink-0" />
             <span>100% Client-Side · Private Guest Mode</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-0)] font-sans">
@@ -84,7 +85,7 @@ export default function GuestJournalToolPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-5 rounded-xl border border-[var(--line)] bg-[var(--bg-1)] space-y-2">
-              <div className="text-lg">📅</div>
+              <Calendar className="w-5 h-5 text-[var(--candle)]" />
               <h3 className="text-sm font-bold text-[var(--text-0)]">P&L Calendar Visualization</h3>
               <p className="text-xs text-[var(--text-2)] leading-relaxed">
                 Transform abstract numbers into intuitive daily profit-and-loss tinting. Spot consecutive losing streaks early and protect mental capital.
@@ -92,7 +93,7 @@ export default function GuestJournalToolPage() {
             </div>
 
             <div className="p-5 rounded-xl border border-[var(--line)] bg-[var(--bg-1)] space-y-2">
-              <div className="text-lg">📐</div>
+              <Target className="w-5 h-5 text-[var(--candle)]" />
               <h3 className="text-sm font-bold text-[var(--text-0)]">R-Multiple Consistency</h3>
               <p className="text-xs text-[var(--text-2)] leading-relaxed">
                 Dollar figures distort discipline. Toggle between fiat P&L and risk-adjusted R-multiples to compare trades across different account balances.
@@ -100,7 +101,7 @@ export default function GuestJournalToolPage() {
             </div>
 
             <div className="p-5 rounded-xl border border-[var(--line)] bg-[var(--bg-1)] space-y-2">
-              <div className="text-lg">🏷️</div>
+              <Tag className="w-5 h-5 text-[var(--candle)]" />
               <h3 className="text-sm font-bold text-[var(--text-0)]">Mistake Tagging</h3>
               <p className="text-xs text-[var(--text-2)] leading-relaxed">
                 Tag trades with common psychological leaks like FOMO, moved stops, or oversized positions to identify exactly which behavioral habits drain your capital.

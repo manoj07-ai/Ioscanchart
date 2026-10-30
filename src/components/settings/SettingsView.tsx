@@ -13,6 +13,7 @@ import {
   DialogDescription,
 } from "@/components/ui/Dialog";
 import { brand } from "@/config/brand";
+import { Check, Copy, Mail } from "lucide-react";
 import { MARKET_PACKS, type MarketPackId } from "@/config/markets";
 import type { Plan } from "@/server/billing";
 
@@ -179,9 +180,16 @@ export function SettingsView({ initialUser, initialEntitlement }: SettingsViewPr
                 variant="secondary"
                 size="sm"
                 disabled={savingProfile}
-                className="shrink-0 text-xs"
+                className="shrink-0 text-xs flex items-center gap-1.5"
               >
-                {savingProfile ? "Saving..." : profileSuccess ? "Saved ✓" : "Save"}
+                {savingProfile ? "Saving..." : profileSuccess ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-[var(--candle)]" />
+                    <span>Saved</span>
+                  </>
+                ) : (
+                  "Save"
+                )}
               </Button>
             </div>
           </div>
@@ -199,9 +207,19 @@ export function SettingsView({ initialUser, initialEntitlement }: SettingsViewPr
                 variant="ghost"
                 size="sm"
                 onClick={handleCopyUserId}
-                className="shrink-0 text-xs"
+                className="shrink-0 text-xs flex items-center gap-1.5"
               >
-                {copiedId ? "Copied! ✓" : "Copy"}
+                {copiedId ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-[var(--candle)]" />
+                    <span>Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>Copy</span>
+                  </>
+                )}
               </Button>
             </div>
           </div>
@@ -298,7 +316,7 @@ export function SettingsView({ initialUser, initialEntitlement }: SettingsViewPr
               >
                 {Object.values(MARKET_PACKS).map((pack) => (
                   <option key={pack.id} value={pack.id}>
-                    {pack.icon} {pack.displayName}
+                    {pack.displayName}
                   </option>
                 ))}
               </select>
@@ -348,8 +366,15 @@ export function SettingsView({ initialUser, initialEntitlement }: SettingsViewPr
           </div>
 
           <div className="flex items-center gap-3 pt-2">
-            <Button type="submit" variant="secondary" size="sm" className="text-xs">
-              {prefSaved ? "Preferences Saved ✓" : "Save Preferences"}
+            <Button type="submit" variant="secondary" size="sm" className="text-xs flex items-center gap-1.5">
+              {prefSaved ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-[var(--candle)]" />
+                  <span>Preferences Saved</span>
+                </>
+              ) : (
+                "Save Preferences"
+              )}
             </Button>
             {prefSaved && (
               <span className="text-xs text-[var(--candle)] font-mono">
@@ -376,8 +401,9 @@ export function SettingsView({ initialUser, initialEntitlement }: SettingsViewPr
           href={`mailto:${brand.supportEmail}?subject=Support%20Request%20-%20${brand.name}`}
           className="shrink-0"
         >
-          <Button variant="secondary" size="sm" className="text-xs">
-            Contact Support ✉️
+          <Button variant="secondary" size="sm" className="text-xs flex items-center gap-1.5">
+            <Mail className="w-3.5 h-3.5" />
+            <span>Contact Support</span>
           </Button>
         </a>
       </div>

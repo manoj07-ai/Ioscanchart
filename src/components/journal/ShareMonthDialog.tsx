@@ -13,6 +13,7 @@ import { brand } from "@/config/brand";
 import { formatMoney } from "@/lib/journal/format";
 import type { Trade } from "@/lib/journal/schema";
 import { toPng } from "html-to-image";
+import { Download } from "lucide-react";
 
 interface ShareMonthDialogProps {
   open: boolean;
@@ -196,9 +197,10 @@ export function ShareMonthDialog({
             size="sm"
             onClick={handleDownloadImage}
             disabled={downloading}
-            className="text-xs font-semibold"
+            className="text-xs font-semibold flex items-center gap-1.5"
           >
-            {downloading ? "Generating image..." : "Download PNG 💾"}
+            <Download className="w-3.5 h-3.5" />
+            <span>{downloading ? "Generating image..." : "Download PNG"}</span>
           </Button>
         </div>
       </DialogContent>

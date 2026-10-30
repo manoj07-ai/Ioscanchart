@@ -9,6 +9,7 @@ import { PriceTag } from "@/components/analysis/primitives/PriceTag";
 import { RiskRewardBar } from "@/components/analysis/primitives/RiskRewardBar";
 import { ConfidenceMeter } from "@/components/analysis/primitives/ConfidenceMeter";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
+import { AlertTriangle, Layers } from "lucide-react";
 import { track } from "@/lib/analytics/track";
 
 export function InteractiveDemo() {
@@ -45,7 +46,7 @@ export function InteractiveDemo() {
                   : "bg-[var(--bg-2)] text-[var(--text-1)] border border-[var(--line)] hover:border-[var(--line-strong)]"
               }`}
             >
-              🇮🇳 NIFTY 50 (India Index)
+              NIFTY 50 (India Index)
             </button>
             <button
               type="button"
@@ -56,7 +57,7 @@ export function InteractiveDemo() {
                   : "bg-[var(--bg-2)] text-[var(--text-1)] border border-[var(--line)] hover:border-[var(--line-strong)]"
               }`}
             >
-              🇺🇸 AAPL (US Equities)
+              AAPL (US Equities)
             </button>
             <button
               type="button"
@@ -67,7 +68,7 @@ export function InteractiveDemo() {
                   : "bg-[var(--bg-2)] text-[var(--text-1)] border border-[var(--line)] hover:border-[var(--line-strong)]"
               }`}
             >
-              🥇 XAUUSD (Gold Spot)
+              XAUUSD (Gold Spot)
             </button>
           </div>
         </div>
@@ -294,7 +295,8 @@ export function InteractiveDemo() {
                   {plan.plan.optionsView && (
                     <div className="pt-2 border-t border-[var(--line)] text-xs space-y-1">
                       <div className="text-[11px] font-semibold text-[var(--info)] flex items-center gap-1.5">
-                        <span>⛓️ Options OI View:</span>
+                        <Layers className="w-3.5 h-3.5" />
+                        <span>Options OI View:</span>
                         <span className="font-mono text-[var(--text-0)]">Max Pain: {plan.plan.optionsView.maxPain} | PCR: {plan.plan.optionsView.pcr}</span>
                       </div>
                       <p className="text-[11px] text-[var(--text-2)] leading-relaxed">
@@ -304,7 +306,8 @@ export function InteractiveDemo() {
                   )}
 
                   <div className="pt-2 border-t border-[var(--line)] text-xs text-[var(--amber)] flex items-start gap-1.5 leading-snug">
-                    <span className="font-bold shrink-0">⚠️ Invalidation:</span>
+                    <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                    <span className="font-bold shrink-0">Invalidation:</span>
                     <span>{plan.plan.invalidation}</span>
                   </div>
                 </div>

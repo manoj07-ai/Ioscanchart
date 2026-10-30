@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import { Download } from "lucide-react";
 import { brand } from "@/config/brand";
 import { SHORT_DISCLAIMER } from "@/config/legal";
 import { CalendarPreview } from "@/components/journal/CalendarPreview";
@@ -24,7 +25,7 @@ export const MARKET_PAGES: Record<string, MarketJournalData> = {
     slug: "forex",
     name: "Forex Trading Journal",
     headline: "Track Pips, Spreads, and Session Overlaps with Precision",
-    badge: "💱 Foreign Exchange (FX)",
+    badge: "Foreign Exchange (FX)",
     description:
       "A specialized trading journal built for currency traders. Track pip values, major trading sessions (London, New York, Tokyo), overnight rollover swap rates, and high-impact macroeconomic news releases.",
     specificFields: [
@@ -72,7 +73,7 @@ export const MARKET_PAGES: Record<string, MarketJournalData> = {
     slug: "crypto",
     name: "Crypto Trading Journal",
     headline: "24/7 Volatility, Funding Rates, and Liquidity Sweep Tracking",
-    badge: "⚡ Cryptocurrency & Derivatives",
+    badge: "Cryptocurrency & Derivatives",
     description:
       "Built for Bitcoin, Ethereum, and altcoin spot and perpetual futures traders. Log funding rates, weekend range sweeps, maker/taker exchange fees, and high-beta liquidation momentum.",
     specificFields: [
@@ -120,7 +121,7 @@ export const MARKET_PAGES: Record<string, MarketJournalData> = {
     slug: "stocks",
     name: "Stock & ETF Trading Journal",
     headline: "Pre-Market Gaps, Earnings Catalysts, and Sector Rotation Logging",
-    badge: "📈 Equities & ETFs",
+    badge: "Equities & ETFs",
     description:
       "Designed for NYSE and NASDAQ swing and day traders. Track earnings announcements, pre-market relative volume, sector rotation, market breadth internals, and multi-day momentum.",
     specificFields: [
@@ -168,7 +169,7 @@ export const MARKET_PAGES: Record<string, MarketJournalData> = {
     slug: "options",
     name: "Options Trading Journal",
     headline: "Greeks, Implied Volatility (IV), and Defined-Risk Payoff Tracking",
-    badge: "🎯 Equity & Index Options",
+    badge: "Equity & Index Options",
     description:
       "Built for option buyers and sellers across US and Indian markets. Track implied volatility rank (IVR), Theta decay, Delta positioning, max pain expiry strikes, and defined-risk spread performance.",
     specificFields: [
@@ -216,7 +217,7 @@ export const MARKET_PAGES: Record<string, MarketJournalData> = {
     slug: "futures",
     name: "Futures & Commodities Trading Journal",
     headline: "Tick Sizes, Point Multipliers, and Margin Discipline",
-    badge: "⚙️ Futures & Commodities",
+    badge: "Futures & Commodities",
     description:
       "A high-leverage trading journal for E-mini S&P (ES), Nasdaq (NQ), Crude Oil (CL), Gold (GC), and agricultural contracts. Track point values, tick slippage, and rollover dates.",
     specificFields: [
@@ -264,7 +265,7 @@ export const MARKET_PAGES: Record<string, MarketJournalData> = {
     slug: "nifty-banknifty",
     name: "Nifty & Bank Nifty Trading Journal",
     headline: "India Expiry Rhythms, Lot Sizes, and SEBI-Compliant Risk Tracking",
-    badge: "🇮🇳 Indian Index Derivatives (NSE / BSE)",
+    badge: "Indian Index Derivatives (NSE / BSE)",
     description:
       "Specifically crafted for Indian index options and futures traders. Built around weekly and monthly expiry cycles, official NSE lot sizes, STT and turnover charges, and Indian numbering (₹ Lakhs & Crores).",
     specificFields: [
@@ -358,8 +359,9 @@ export default async function MarketJournalPage(props: { params: Promise<{ marke
             </Button>
           </Link>
           <a href="/downloads/trading-journal-template.csv" download>
-            <Button variant="secondary" size="lg" className="font-medium px-5">
-              Download CSV Template 📥
+            <Button variant="secondary" size="lg" className="font-medium px-5 flex items-center gap-2">
+              <span>Download CSV Template</span>
+              <Download className="w-4 h-4" />
             </Button>
           </a>
         </div>

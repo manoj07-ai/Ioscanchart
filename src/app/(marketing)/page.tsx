@@ -3,6 +3,7 @@ import Link from "next/link";
 import { brand } from "@/config/brand";
 import { CandleBackdrop } from "@/components/marketing/CandleBackdrop";
 import { HeroSampleCard } from "@/components/marketing/HeroSampleCard";
+import { Check } from "lucide-react";
 import { MarketTickerStrip } from "@/components/marketing/MarketTickerStrip";
 import { InteractiveDemo } from "@/components/marketing/InteractiveDemo";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
@@ -144,15 +145,15 @@ export default function MarketingHomePage() {
               {/* Trust & Policy Micro-note */}
               <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs text-[var(--text-2)]">
                 <span className="flex items-center gap-1.5">
-                  <span className="text-[var(--candle)]">✓</span> 1 Full Free Analysis
+                  <Check className="w-3.5 h-3.5 text-[var(--candle)] stroke-[2.5]" /> 1 Full Free Analysis
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5">
-                  <span className="text-[var(--candle)]">✓</span> No Credit Card Required
+                  <Check className="w-3.5 h-3.5 text-[var(--candle)] stroke-[2.5]" /> No Credit Card Required
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5">
-                  <span className="text-[var(--candle)]">✓</span> &lt;30s Latency
+                  <Check className="w-3.5 h-3.5 text-[var(--candle)] stroke-[2.5]" /> &lt;30s Latency
                 </span>
               </div>
             </div>

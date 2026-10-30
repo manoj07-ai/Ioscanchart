@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/Button";
 import { track } from "@/lib/analytics/track";
@@ -87,7 +88,7 @@ export function Navbar() {
           aria-label="Toggle menu"
           aria-expanded={isMobileMenuOpen}
         >
-          <span className="text-xl">{isMobileMenuOpen ? "✕" : "☰"}</span>
+          {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 

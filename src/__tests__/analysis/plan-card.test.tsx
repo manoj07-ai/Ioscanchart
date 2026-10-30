@@ -25,7 +25,7 @@ describe("PlanCardHero Component Tests", () => {
       <PlanCardHero plan={longPlan} symbol="AAPL" timeframe="1D" />
     );
 
-    expect(screen.getByText(/▲ Long Setup/i)).toBeDefined();
+    expect(screen.getByText(/Long Setup/i)).toBeDefined();
     expect(screen.getByText("150")).toBeDefined();
     expect(screen.getByText("145")).toBeDefined();
     expect(screen.getByText("160")).toBeDefined();

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { formatPrice } from "@/lib/utils/formatters";
 
@@ -53,8 +54,8 @@ export function PriceTag({
     >
       <span>{displayString}</span>
       {copyable && (
-        <span className="text-[10px] opacity-70" aria-hidden="true">
-          {copied ? "✓" : "📋"}
+        <span className="opacity-70" aria-hidden="true">
+          {copied ? <Check className="w-3 h-3 text-[var(--candle)] inline" /> : <Copy className="w-3 h-3 inline" />}
         </span>
       )}
     </button>

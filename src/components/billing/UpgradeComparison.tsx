@@ -1,5 +1,7 @@
 "use client";
 
+import { Scale } from "lucide-react";
+
 function CheckIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -120,8 +122,9 @@ export function UpgradeComparison() {
       {/* Money-honest notice */}
       <div className="p-4 rounded-xl bg-[var(--bg-2)]/60 border border-[var(--line)] space-y-1.5">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-[var(--text-0)] uppercase tracking-wider font-mono">
-            ⚖ Money-Honest Guarantee
+          <span className="text-xs font-semibold text-[var(--text-0)] uppercase tracking-wider font-mono flex items-center gap-1.5">
+            <Scale className="w-3.5 h-3.5 text-[var(--candle)] shrink-0" />
+            <span>Money-Honest Guarantee</span>
           </span>
           <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--bg-3)] text-[var(--text-2)] font-mono">
             Transparency first

@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { ToastProvider, useToast } from "@/components/ui/Toast";
 import { Switch } from "@/components/ui/Switch";
 import { Select } from "@/components/ui/Select";
+import { Settings, Play, Plus, Search } from "lucide-react";
 import { WickDivider } from "@/components/ui/WickDivider";
 import { CandleBackdrop } from "@/components/marketing/CandleBackdrop";
 import { Logo, LogoMark } from "@/components/brand/Logo";
@@ -248,13 +249,13 @@ function GalleryContent() {
                 </Button>
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" size="icon" aria-label="Settings">
-                    ⚙️
+                    <Settings className="w-4 h-4" />
                   </Button>
                   <Button variant="secondary" size="icon" aria-label="Add chart">
-                    +
+                    <Plus className="w-4 h-4" />
                   </Button>
                   <Button variant="primary-gradient" size="icon" aria-label="Play">
-                    ▶
+                    <Play className="w-4 h-4 fill-current" />
                   </Button>
                 </div>
               </div>
@@ -405,7 +406,7 @@ function GalleryContent() {
                 <CardTitle className="text-sm">Inputs & Select</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Input placeholder="Enter ticker (e.g. NIFTY50, AAPL)" startAdornment="🔍" />
+                <Input placeholder="Enter ticker (e.g. NIFTY50, AAPL)" startAdornment={<Search className="w-4 h-4 text-text-muted" />} />
                 <Input
                   defaultValue="Invalid URL"
                   error="Chart URL must be a valid TradingView link"

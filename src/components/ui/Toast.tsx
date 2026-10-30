@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 export interface ToastItem {
@@ -96,10 +97,10 @@ export function Toaster() {
             <button
               type="button"
               onClick={() => ctx.dismiss(item.id)}
-              className="text-[var(--text-2)] hover:text-[var(--text-0)] text-xs p-0.5 cursor-pointer"
+              className="text-[var(--text-2)] hover:text-[var(--text-0)] p-0.5 cursor-pointer"
               aria-label="Dismiss toast"
             >
-              ✕
+              <X className="w-3.5 h-3.5" />
             </button>
           </div>
         );

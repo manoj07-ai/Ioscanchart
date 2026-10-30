@@ -9,6 +9,7 @@ import {
   DialogDescription,
 } from "@/components/ui/Dialog";
 import { Button } from "@/components/ui/Button";
+import { FileText } from "lucide-react";
 import { parseAndValidateCsv, type CsvImportResult } from "@/lib/journal/csv";
 import type { Trade } from "@/lib/journal/schema";
 
@@ -90,9 +91,10 @@ export function ImportCsvDialog({
               variant="secondary"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
-              className="text-xs"
+              className="text-xs flex items-center gap-1.5"
             >
-              Choose CSV File 📁
+              <FileText className="w-3.5 h-3.5" />
+              <span>Choose CSV File</span>
             </Button>
 
             <a

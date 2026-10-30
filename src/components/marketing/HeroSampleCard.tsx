@@ -7,6 +7,7 @@ import { LevelChip } from "@/components/analysis/primitives/LevelChip";
 import { PriceTag } from "@/components/analysis/primitives/PriceTag";
 import { ConfidenceMeter } from "@/components/analysis/primitives/ConfidenceMeter";
 import { RiskRewardBar } from "@/components/analysis/primitives/RiskRewardBar";
+import { Check, AlertTriangle } from "lucide-react";
 
 /**
  * Animated sample analysis card for the hero section.
@@ -38,7 +39,7 @@ export function HeroSampleCard() {
       {/* Data Quality Report Bar */}
       <div className="mb-4 rounded-xl bg-[var(--bg-2)] border border-[var(--line)] p-2.5 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2 text-[var(--text-2)]">
-          <span className="text-[var(--candle)]">✓</span>
+          <Check className="w-3.5 h-3.5 text-[var(--candle)] shrink-0" />
           <span>Data quality: Ticker, 120 candles, right axis verified</span>
         </div>
         <span className="font-mono text-[10px] text-[var(--text-2)]">India Pack</span>
@@ -142,7 +143,8 @@ export function HeroSampleCard() {
         <RiskRewardBar riskReward={2.8} />
 
         <div className="pt-1 border-t border-[var(--line)]/50 text-[11px] text-[var(--amber)] flex items-start gap-1.5 leading-snug">
-          <span className="font-bold shrink-0">⚠️ Invalidation:</span>
+          <AlertTriangle className="w-3.5 h-3.5 text-[var(--amber)] shrink-0 mt-0.5" />
+          <span className="font-bold shrink-0">Invalidation:</span>
           <span>Hourly close below 24,230 cancels this idea immediately.</span>
         </div>
       </div>
